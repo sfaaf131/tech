@@ -1,4 +1,4 @@
-import { usdToClp } from "@/lib/site";
+import { usdToClp } from "./site";
 
 export function clp(value: number) {
   return new Intl.NumberFormat("es-CL", {

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ButtonLink, Kicker, Section } from "@/components/ui/page";
 import { audiences, saasPlans, serviceGroups, services } from "@/lib/catalog";
 import { site } from "@/lib/site";
@@ -110,13 +111,13 @@ export default function HomePage() {
         </p>
         <div className="mt-10 grid gap-4 md:grid-cols-2">
           {audiences.map((item) => (
-            <a key={item.id} href={item.href} className="cell block p-6">
+            <Link key={item.id} href={item.href} className="cell block p-6">
               <p className="font-mono text-[11px] tracking-[0.18em] text-signal uppercase">
                 {item.id}
               </p>
               <h3 className="font-display mt-3 text-2xl">{item.label}</h3>
               <p className="mt-3 text-sm leading-6 text-mist">{item.summary}</p>
-            </a>
+            </Link>
           ))}
         </div>
       </Section>

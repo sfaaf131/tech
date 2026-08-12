@@ -8,7 +8,7 @@ import {
   type ScopeId,
   type ServiceId,
   type TimelineId,
-} from "@/lib/catalog";
+} from "./catalog";
 
 export type QuoteInput = {
   audience: AudienceId;

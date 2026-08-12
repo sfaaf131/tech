@@ -1,6 +1,6 @@
-import { estimateQuote } from "../src/lib/quote.ts";
-import { estimateRoi } from "../src/lib/roi.ts";
-import { sealEvent, verifyChain } from "../src/lib/audit.ts";
+import { estimateQuote } from "../src/lib/quote";
+import { estimateRoi } from "../src/lib/roi";
+import { sealEvent, verifyChain } from "../src/lib/audit";
 
 const quote = estimateQuote({
   audience: "banca",

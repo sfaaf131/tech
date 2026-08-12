@@ -15,7 +15,7 @@ export default async function AppHomePage() {
     role === "programador"
       ? [
           ["Validación técnica", "GitHub / GitLab confirmados. Puedes unirte a células y al marketplace."],
-          ["Células abiertas", "2 squds buscan un asiento de ingeniería esta semana."],
+          ["Células abiertas", "2 células buscan un asiento de ingeniería esta semana."],
           ["Horas", "La fábrica registra tiempo contra proyecto, no contra tickets sueltos."],
         ]
       : role === "inversor"
