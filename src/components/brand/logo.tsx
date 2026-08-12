@@ -8,13 +8,13 @@ export function Logo({ className }: { className?: string }) {
         className="size-8"
         aria-hidden="true"
       >
-        <rect width="32" height="32" rx="9" fill="#d4ff3f" />
-        <circle cx="10" cy="10" r="2.1" fill="#14180a" />
-        <circle cx="22" cy="10" r="2.1" fill="#14180a" />
-        <circle cx="16" cy="22" r="2.1" fill="#14180a" />
+        <rect width="32" height="32" rx="9" fill="#5eead4" />
+        <circle cx="10" cy="10" r="2.1" fill="#042f2e" />
+        <circle cx="22" cy="10" r="2.1" fill="#042f2e" />
+        <circle cx="16" cy="22" r="2.1" fill="#042f2e" />
         <path
           d="M10 10h12M10 10l6 12M22 10l-6 12"
-          stroke="#14180a"
+          stroke="#042f2e"
           strokeWidth="1.4"
           strokeLinecap="round"
         />

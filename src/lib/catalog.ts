@@ -65,7 +65,7 @@ export const services = [
     name: "Agentes de IA autónomos",
     group: "automation",
     hours: 280,
-    blurb: "Agentes con herramientas, memoria y supervisión humana.",
+    blurb: "Agentes autónomos con Grok 4.6, herramientas, memoria y supervisión humana.",
   },
   {
     id: "web3",
@@ -174,7 +174,7 @@ export const saasPlans = [
     cadence: "mes",
     audience: "Emprendedores y solopreneurs",
     points: [
-      "Agente de incubación para estructurar el negocio",
+      "Agente Cofundador con Grok 4.6 para estructurar el negocio",
       "Hasta 3 iniciativas activas",
       "Marketplace de socios en modo lectura",
       "Passport con validación comercial",

@@ -4,6 +4,7 @@ import { site } from "@/lib/site";
 export default function sitemap(): MetadataRoute.Sitemap {
   const paths = [
     "",
+    "/agentes",
     "/incubadora",
     "/fabrica",
     "/enterprise",
@@ -12,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/cotizador",
     "/roi",
     "/passport",
+    "/seguridad",
     "/contacto",
   ];
 

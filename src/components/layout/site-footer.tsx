@@ -4,7 +4,7 @@ import { footerNav, site } from "@/lib/site";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-line bg-ink-2">
+    <footer className="band border-t border-line">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 md:grid-cols-4">
         <div className="space-y-4">
           <Logo />

@@ -36,6 +36,8 @@ export const metadata: Metadata = {
     "KYC",
     "Open Banking",
     "agentes de IA",
+    "Grok 4.6",
+    "xAI",
   ],
   openGraph: {
     title: `${site.name}.tech`,
@@ -57,7 +59,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#07080a",
+  themeColor: "#07090c",
   colorScheme: "dark",
   width: "device-width",
   initialScale: 1,

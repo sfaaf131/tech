@@ -32,15 +32,19 @@ const faq = [
     a: "Sí. BPM, process mining, motores de riesgo, KYC/AML, RegTech y Open Banking. Las células de banca nacen con evidencia, cifrado y un asiento de cumplimiento.",
   },
   {
+    q: "¿Con qué modelo corren los agentes?",
+    a: "Grok 4.6. Hay tres: Cofundador (incubación), Célula (alcance de ingeniería) y Cumplimiento (KYC/AML, RegTech, Open Banking). Supervisión humana y bitácora en cada turno.",
+  },
+  {
     q: "¿Cómo entro?",
     a: "Programadores con GitHub o GitLab. Fundadores, inversores y corporativos con LinkedIn. Passport no es un login decorativo: es la validación que abre marketplace, equity y consola.",
   },
 ];
 
 const steps = [
-  ["01", "Passport", "Identidad técnica o comercial. Sin eso no hay matching ni sala de equity."],
-  ["02", "Cotiza o mide", "El cotizador arma la célula. El ROI muestra payback. Ambos se pueden sellar."],
-  ["03", "Ejecuta", "Incubadora para estructurar. Fábrica para construir. Co-creación cuando hay sociedad."],
+  ["01", "Agente", "Grok 4.6 estructura el negocio, el alcance técnico o el control regulatorio."],
+  ["02", "Número", "El cotizador arma la célula. El ROI muestra payback. Ambos se pueden sellar."],
+  ["03", "Célula", "Ingeniería que se queda con el contexto. Co-creación cuando hay sociedad."],
 ];
 
 export default function HomePage() {
@@ -49,6 +53,20 @@ export default function HomePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faq.map((item) => ({
+              "@type": "Question",
+              name: item.q,
+              acceptedAnswer: { "@type": "Answer", text: item.a },
+            })),
+          }),
+        }}
       />
       <section className="grid-bg grain relative overflow-hidden">
         <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:grid-cols-[1.15fr_0.85fr] md:py-28">
@@ -62,7 +80,7 @@ export default function HomePage() {
               {site.description}
             </p>
             <div className="rise-3 mt-8 flex flex-wrap gap-3">
-              <ButtonLink href="/incubadora">Soy emprendedor</ButtonLink>
+              <ButtonLink href="/agentes">Hablar con Grok 4.6</ButtonLink>
               <ButtonLink href="/enterprise" tone="ghost">
                 Soy empresa o banca
               </ButtonLink>
@@ -73,7 +91,7 @@ export default function HomePage() {
           </div>
           <div className="rise-2 grid grid-cols-2 gap-3 self-end">
             {[
-              ["/modelo", "SaaS", "Incubadora y agentes"],
+              ["/agentes", "Agentes", "Grok 4.6"],
               ["/fabrica", "Fábrica", "Células ágiles"],
               ["/modelo", "Equity", "Proyectos co-creados"],
               ["/enterprise", "Banca", "Riesgo, KYC, AML"],
@@ -128,7 +146,7 @@ export default function HomePage() {
         </div>
       </Section>
 
-      <section className="bg-paper text-ink">
+      <section className="band border-y border-line">
         <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:grid-cols-2">
           <div>
             <p className="font-mono text-[11px] tracking-[0.22em] text-copper uppercase">
@@ -137,14 +155,14 @@ export default function HomePage() {
             <h2 className="font-display mt-4 text-3xl font-semibold md:text-4xl">
               Un cofundador de IA, no un PDF.
             </h2>
-            <ul className="mt-6 space-y-3 text-sm leading-6 text-ink/75">
-              <li className="border-t border-ink/10 pt-3">
+            <ul className="mt-6 space-y-3 text-sm leading-6 text-mist">
+              <li className="border-t border-line pt-3">
                 De una idea en lenguaje natural a un negocio estructurado.
               </li>
-              <li className="border-t border-ink/10 pt-3">
-                Estrategia, mercado, finanzas y operaciones en un mismo agente.
+              <li className="border-t border-line pt-3">
+                Estrategia, mercado, finanzas y operaciones en un mismo agente Grok 4.6.
               </li>
-              <li className="border-t border-ink/10 pt-3">
+              <li className="border-t border-line pt-3">
                 Marketplace de socios con identidad validada.
               </li>
             </ul>
@@ -156,14 +174,14 @@ export default function HomePage() {
             <h2 className="font-display mt-4 text-3xl font-semibold md:text-4xl">
               Células que se quedan con el contexto.
             </h2>
-            <ul className="mt-6 space-y-3 text-sm leading-6 text-ink/75">
-              <li className="border-t border-ink/10 pt-3">
+            <ul className="mt-6 space-y-3 text-sm leading-6 text-mist">
+              <li className="border-t border-line pt-3">
                 Ingeniería senior con seguridad y cumplimiento de origen.
               </li>
-              <li className="border-t border-ink/10 pt-3">
+              <li className="border-t border-line pt-3">
                 Horas medibles, evidencias y continuidad de dominio.
               </li>
-              <li className="border-t border-ink/10 pt-3">
+              <li className="border-t border-line pt-3">
                 De un MVP a sistemas que mueven dinero.
               </li>
             </ul>
@@ -178,7 +196,7 @@ export default function HomePage() {
         </h2>
         <div className="mt-10 grid gap-4 md:grid-cols-3">
           {[
-            ["01", "Suscripción SaaS", "Incubadora, agentes, marketplace y Passport. Recurrencia para emprendedores y equipos."],
+            ["01", "Suscripción SaaS", "Incubadora, agentes Grok 4.6, marketplace y Passport."],
             ["02", "Fábrica por hora", "Células de ingeniería con tarifa clara. Producto, automatización y sistemas enterprise."],
             ["03", "Sweat equity", "Co-creación: Kondax pone célula y producto a cambio de participación."],
           ].map(([code, name, text]) => (
@@ -230,7 +248,7 @@ export default function HomePage() {
         </div>
       </Section>
 
-      <section className="border-y border-line bg-ink-2">
+      <section className="band border-y border-line">
         <div className="mx-auto grid max-w-6xl gap-8 px-5 py-16 sm:grid-cols-2 md:grid-cols-4">
           {saasPlans.map((plan) => (
             <article key={plan.id}>
@@ -250,26 +268,29 @@ export default function HomePage() {
       <Section>
         <div className="grid gap-6 md:grid-cols-2">
           <article className="cell p-8">
-            <Kicker>Cotizador inteligente</Kicker>
-            <h2 className="font-display mt-4 text-3xl">Arma la célula y el precio.</h2>
+            <Kicker>Agentes Grok 4.6</Kicker>
+            <h2 className="font-display mt-4 text-3xl">Estructura antes de construir.</h2>
             <p className="mt-3 text-sm leading-6 text-mist">
-              Audiencia, servicios, alcance y plazo. El cotizador estima horas, banda
-              de inversión y composición de la célula. El enlace se puede compartir.
+              Cofundador, célula y cumplimiento. Describe la idea o el proceso; el
+              agente responde con un plan que una célula puede ejecutar.
             </p>
             <div className="mt-6">
-              <ButtonLink href="/cotizador">Cotizar un proyecto</ButtonLink>
+              <ButtonLink href="/agentes">Abrir agentes</ButtonLink>
             </div>
           </article>
           <article className="cell p-8">
-            <Kicker>ROI corporativo</Kicker>
-            <h2 className="font-display mt-4 text-3xl">Mide el retorno antes del sprint.</h2>
+            <Kicker>Cotizador y ROI</Kicker>
+            <h2 className="font-display mt-4 text-3xl">Arma el número.</h2>
             <p className="mt-3 text-sm leading-6 text-mist">
-              Presets para pyme, corporación y banca. Payback, ahorro a 3 años y sello
-              de auditoría.
+              Horas, banda de inversión y payback corporativo. El enlace se comparte;
+              el resultado se sella.
             </p>
-            <div className="mt-6">
+            <div className="mt-6 flex flex-wrap gap-3">
+              <ButtonLink href="/cotizador" tone="ghost">
+                Cotizar
+              </ButtonLink>
               <ButtonLink href="/roi" tone="ghost">
-                Calcular ROI
+                ROI
               </ButtonLink>
             </div>
           </article>

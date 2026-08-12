@@ -18,7 +18,7 @@ export default function ModeloPage() {
       <Section>
         <div className="grid gap-4 md:grid-cols-3">
           {[
-            ["Suscripciones", "La incubadora y el Passport son el motor recurrente. Launch y Studio cubren independientes; Cell cubre pymes con roadmap."],
+            ["Suscripciones", "La incubadora, los agentes Grok 4.6 y el Passport son el motor recurrente. Launch y Studio cubren independientes; Cell cubre pymes con roadmap."],
             ["Horas de fábrica", "Cuando hay que construir, la célula factura. La tarifa sube con criticidad: banca no paga la misma hora que un MVP."],
             ["Sweat equity", "Proyectos co-creados. Kondax pone producto y célula; el cap table registra la participación. No es un descuento: es sociedad."],
           ].map(([title, text]) => (
@@ -50,8 +50,11 @@ export default function ModeloPage() {
             </article>
           ))}
         </div>
-        <div className="mt-10">
+        <div className="mt-10 flex flex-wrap gap-3">
           <ButtonLink href="/cotizador">Simular un engagement mixto</ButtonLink>
+          <ButtonLink href="/agentes" tone="ghost">
+            Probar agentes
+          </ButtonLink>
         </div>
       </Section>
     </>

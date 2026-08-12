@@ -23,8 +23,8 @@ export default function FabricaPage() {
         actions={
           <>
             <ButtonLink href="/cotizador">Armar una célula</ButtonLink>
-            <ButtonLink href="/servicios" tone="ghost">
-              Ver servicios
+            <ButtonLink href="/agentes" tone="ghost">
+              Agente Célula
             </ButtonLink>
           </>
         }
@@ -33,7 +33,7 @@ export default function FabricaPage() {
         <Kicker>Cómo opera</Kicker>
         <div className="mt-6 grid gap-4 md:grid-cols-3">
           {[
-            ["Descubrimiento", "Alcance, riesgos, stack y criterio de done. El cotizador es el primer artefacto."],
+            ["Descubrimiento", "El agente Célula (Grok 4.6) arma alcance, riesgos, stack y criterio de done. El cotizador es el primer artefacto."],
             ["Célula", "Lead, ingeniería y especialidades según el trabajo: IA, mobile, riesgo, identidad."],
             ["Evidencia", "Horas, commits, despliegues y sello de auditoría. El cliente ve el rastro."],
           ].map(([title, text]) => (

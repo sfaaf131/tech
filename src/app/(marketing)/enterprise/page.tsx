@@ -64,21 +64,21 @@ export default function EnterprisePage() {
           ))}
         </div>
       </Section>
-      <section className="bg-paper text-ink">
+      <section className="band border-y border-line">
         <div className="mx-auto max-w-6xl px-5 py-20">
           <Kicker>Por qué banca</Kicker>
           <h2 className="font-display mt-4 max-w-3xl text-3xl md:text-5xl">
             El software que mueve dinero no se improvisa en un sprint de marketing.
           </h2>
-          <p className="mt-6 max-w-2xl leading-7 text-ink/70">
+          <p className="mt-6 max-w-2xl leading-7 text-mist">
             Kondax prepara cifrado en tránsito (TLS 1.3), cifrado en reposo (AES-256),
             logs encadenados y un camino a SOC 2 e ISO 27001. Las células de banca
             incluyen el asiento de seguridad y cumplimiento desde el día uno.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <ButtonLink href="/cotizador">Cotizar un sistema regulado</ButtonLink>
-            <ButtonLink href="/passport" tone="ghost">
-              Acceso corporativo
+            <ButtonLink href="/agentes" tone="ghost">
+              Agente de cumplimiento
             </ButtonLink>
           </div>
         </div>

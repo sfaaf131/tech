@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #07080a;
-  --ink-2: #101317;
-  --ink-3: #181d23;
-  --paper: #f3efe6;
-  --paper-2: #e4ddcf;
-  --signal: #d4ff3f;
-  --signal-ink: #14180a;
-  --copper: #c9a36a;
-  --mist: #9b968b;
-  --line: rgba(243, 239, 230, 0.12);
+  --ink: #07090c;
+  --ink-2: #0c1016;
+  --ink-3: #151b24;
+  --paper: #e8eef4;
+  --paper-2: #c5ced8;
+  --signal: #5eead4;
+  --signal-ink: #042f2e;
+  --copper: #93a4b8;
+  --mist: #8b97a8;
+  --line: rgba(232, 238, 244, 0.1);
   --danger: #ff6b57;
 }
 
@@ -52,9 +52,15 @@ body {
 
 .grid-bg {
   background-image:
-    linear-gradient(to right, rgba(243, 239, 230, 0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(243, 239, 230, 0.045) 1px, transparent 1px);
+    linear-gradient(to right, rgba(232, 238, 244, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(232, 238, 244, 0.04) 1px, transparent 1px);
   background-size: 56px 56px;
+}
+
+.band {
+  background:
+    radial-gradient(900px 280px at 12% 0%, rgba(94, 234, 212, 0.08), transparent 58%),
+    var(--ink-2);
 }
 
 .grain {
@@ -66,7 +72,7 @@ body {
   pointer-events: none;
   position: absolute;
   inset: 0;
-  opacity: 0.1;
+  opacity: 0.08;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
 }
@@ -96,13 +102,13 @@ body {
 
 .cell {
   border: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(243, 239, 230, 0.035), rgba(243, 239, 230, 0.012));
+  background: linear-gradient(180deg, rgba(232, 238, 244, 0.04), rgba(232, 238, 244, 0.012));
   border-radius: 1.35rem;
   transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
 }
 
 .cell:hover {
-  border-color: rgba(212, 255, 63, 0.28);
+  border-color: rgba(94, 234, 212, 0.35);
 }
 
 a.cell:hover,
@@ -126,7 +132,7 @@ button.cell:hover {
 }
 
 .field:focus {
-  border-color: rgba(212, 255, 63, 0.55);
+  border-color: rgba(94, 234, 212, 0.55);
 }
 
 input[type="range"] {
