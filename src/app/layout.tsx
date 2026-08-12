@@ -36,8 +36,6 @@ export const metadata: Metadata = {
     "KYC",
     "Open Banking",
     "agentes de IA",
-    "Grok 4.6",
-    "xAI",
   ],
   openGraph: {
     title: `${site.name}.tech`,

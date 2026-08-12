@@ -24,7 +24,7 @@ const controls = [
   },
   {
     title: "Aplicación",
-    text: "Next.js, Node y Python para agentes, PostgreSQL como sistema de registro. Grok 4.6 con límites, bitácora y supervisión humana.",
+    text: "Next.js, Node y Python para agentes, PostgreSQL como sistema de registro. APIs de OpenAI y Claude con límites y bitácora.",
   },
   {
     title: "Certificación",
@@ -39,14 +39,7 @@ export default function SeguridadPage() {
         kicker="Estándar enterprise"
         title="Seguridad de banca, desde el primer commit."
         description="Kondax no agrega cumplimiento al final. Las células de enterprise y banca nacen con cifrado, identidad federada y una pista de auditoría que se puede mostrar a un regulador."
-        actions={
-          <>
-            <ButtonLink href="/enterprise">Ver línea enterprise</ButtonLink>
-            <ButtonLink href="/agentes" tone="ghost">
-              Agente de cumplimiento
-            </ButtonLink>
-          </>
-        }
+        actions={<ButtonLink href="/enterprise">Ver línea enterprise</ButtonLink>}
       />
       <Section>
         <div className="grid gap-4 md:grid-cols-2">
@@ -74,7 +67,7 @@ export default function SeguridadPage() {
                 ["APIs y agentes", "Node.js y Python"],
                 ["Datos", "PostgreSQL"],
                 ["Identidad", "OAuth 2.0 · Kondax Passport"],
-                ["Modelos", "Grok 4.6 (xAI)"],
+                ["Modelos", "OpenAI / Claude"],
                 ["Observabilidad", "Logs encadenados + sellos SHA-256"],
               ].map(([layer, choice]) => (
                 <tr key={layer}>

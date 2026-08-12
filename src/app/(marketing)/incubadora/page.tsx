@@ -15,7 +15,7 @@ const steps = [
   {
     n: "02",
     title: "El agente estructura el negocio",
-    text: "El agente Grok 4.6 estructura propuesta de valor, mercado, producto, precios, ventas, finanzas y operaciones.",
+    text: "El agente estructura propuesta de valor, mercado, producto, precios, ventas, finanzas y operaciones.",
   },
   {
     n: "03",
@@ -38,9 +38,9 @@ export default function IncubadoraPage() {
         description="Para independientes que no quieren un PDF de consultoría ni un equipo fantasma. Kondax combina un cofundador de IA con una red de personas validadas por Passport y, cuando corresponde, una célula que construye."
         actions={
           <>
-            <ButtonLink href="/agentes">Hablar con Grok 4.6</ButtonLink>
-            <ButtonLink href="/passport" tone="ghost">
-              Entrar con Passport
+            <ButtonLink href="/passport">Entrar con Passport</ButtonLink>
+            <ButtonLink href="/modelo" tone="ghost">
+              Ver planes SaaS
             </ButtonLink>
           </>
         }

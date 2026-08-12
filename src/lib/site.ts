@@ -9,10 +9,10 @@ export const site = {
 } as const;
 
 export const nav = [
-  { href: "/agentes", label: "Agentes" },
   { href: "/incubadora", label: "Incubadora" },
   { href: "/fabrica", label: "Fábrica" },
   { href: "/enterprise", label: "Enterprise" },
+  { href: "/servicios", label: "Servicios" },
 ] as const;
 
 export const toolNav = [
@@ -28,7 +28,6 @@ export const footerNav = {
     { href: "/modelo", label: "Modelo y monetización" },
   ],
   Producto: [
-    { href: "/agentes", label: "Agentes Grok 4.6" },
     { href: "/servicios", label: "Matriz de servicios" },
     { href: "/cotizador", label: "Cotizador inteligente" },
     { href: "/roi", label: "Calculadora de ROI" },

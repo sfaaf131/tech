@@ -11,7 +11,7 @@ export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const inApp = pathname.startsWith("/app");
-  const links = [...nav, ...toolNav, { href: "/servicios", label: "Servicios" }, { href: "/modelo", label: "Modelo" }, { href: "/seguridad", label: "Seguridad" }, { href: "/contacto", label: "Contacto" }];
+  const links = [...nav, ...toolNav, { href: "/modelo", label: "Modelo" }, { href: "/seguridad", label: "Seguridad" }, { href: "/contacto", label: "Contacto" }];
 
   useEffect(() => {
     if (!open) return;

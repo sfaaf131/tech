@@ -1,7 +1,6 @@
 import { estimateQuote } from "../src/lib/quote";
 import { estimateRoi } from "../src/lib/roi";
 import { sealEvent, verifyChain } from "../src/lib/audit";
-import { agentById, agents, grokModel } from "../src/lib/agents";
 
 const quote = estimateQuote({
   audience: "banca",
@@ -35,18 +34,6 @@ const first = sealEvent("test", { ok: true });
 const second = sealEvent("test.2", { ok: true }, first.hash);
 if (!verifyChain([first, second])) {
   throw new Error("audit chain should verify");
-}
-
-if (grokModel !== "grok-4.6") {
-  throw new Error(`expected grok-4.6, got ${grokModel}`);
-}
-
-if (agents.length !== 3 || agentById("missing").id !== "cofundador") {
-  throw new Error("agent catalog should default to cofundador");
-}
-
-if (!agents.every((agent) => agent.prompt.includes("español"))) {
-  throw new Error("every agent should answer in Spanish");
 }
 
 console.log("kondax math ok", {

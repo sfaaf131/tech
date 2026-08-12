@@ -31,7 +31,7 @@ export default function OpenGraphImage() {
           </div>
         </div>
         <div style={{ fontSize: 24, color: "#8b97a8" }}>
-          Agentes Grok 4.6 · Fábrica · Sweat equity
+          SaaS · Fábrica · Sweat equity
         </div>
       </div>
     ),

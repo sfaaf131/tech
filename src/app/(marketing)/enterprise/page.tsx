@@ -77,8 +77,8 @@ export default function EnterprisePage() {
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <ButtonLink href="/cotizador">Cotizar un sistema regulado</ButtonLink>
-            <ButtonLink href="/agentes" tone="ghost">
-              Agente de cumplimiento
+            <ButtonLink href="/passport" tone="ghost">
+              Kondax Passport
             </ButtonLink>
           </div>
         </div>
