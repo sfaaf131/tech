@@ -18,14 +18,17 @@ export function PassportGate({
   const [role, setRole] = useState<RoleId>("fundador");
   const [name, setName] = useState("");
   const selected = roles.find((item) => item.id === role) ?? roles[1];
+  const canEnter = name.trim().length >= 2;
 
   return (
     <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-      <div className="space-y-3">
+      <div className="space-y-3" role="listbox" aria-label="Rol Passport">
         {roles.map((item) => (
           <button
             key={item.id}
             type="button"
+            role="option"
+            aria-selected={role === item.id}
             onClick={() => setRole(item.id)}
             className={`cell w-full p-5 text-left ${role === item.id ? "border-signal" : ""}`}
           >
@@ -39,8 +42,13 @@ export function PassportGate({
         <p className="font-mono text-[11px] tracking-[0.18em] text-copper uppercase">
           Kondax Passport · OAuth 2.0
         </p>
-        <h2 className="font-display mt-4 text-3xl">Validación {selected.validation === "technical" ? "técnica" : "comercial"}</h2>
+        <h2 className="font-display mt-4 text-3xl">
+          Validación {selected.validation === "technical" ? "técnica" : "comercial"}
+        </h2>
         <p className="mt-3 text-sm leading-6 text-mist">{selected.requirement}</p>
+        <p className="mt-4 rounded-2xl border border-line bg-ink-2 px-4 py-3 font-mono text-[11px] tracking-[0.14em] text-copper uppercase">
+          Sello {selected.id} · {selected.providers.join(" / ")}
+        </p>
 
         <label className="mt-6 block text-sm">
           <span className="text-mist">Nombre para la sesión</span>
@@ -49,6 +57,8 @@ export function PassportGate({
             value={name}
             onChange={(event) => setName(event.target.value)}
             placeholder="Ej. Agustín Sáez"
+            autoComplete="name"
+            required
           />
         </label>
 
@@ -74,14 +84,15 @@ export function PassportGate({
 
         <form action={enterPassport} className="mt-8 border-t border-line pt-6">
           <input type="hidden" name="role" value={role} />
-          <input type="hidden" name="name" value={name} />
+          <input type="hidden" name="name" value={name.trim()} />
           <p className="text-sm text-mist">
-            Mientras se configuran las claves OAuth, puedes abrir la consola en modo
-            Passport de demostración. El rol y el tipo de validación quedan en la sesión.
+            Sin claves OAuth, la consola abre en modo demostración. El rol y la
+            validación quedan en la sesión.
           </p>
           <button
             type="submit"
-            className="mt-4 rounded-full bg-signal px-5 py-2.5 text-sm font-medium text-signal-ink"
+            disabled={!canEnter}
+            className="mt-4 rounded-full bg-signal px-5 py-2.5 text-sm font-medium text-signal-ink disabled:opacity-40"
           >
             Entrar a la consola
           </button>

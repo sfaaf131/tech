@@ -12,6 +12,9 @@ export function SiteFooter() {
           <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-copper">
             TLS 1.3 · AES-256 · SOC 2 / ISO 27001 ready
           </p>
+          <a href={`mailto:${site.email}`} className="block text-sm text-paper hover:text-signal">
+            {site.email}
+          </a>
         </div>
         {Object.entries(footerNav).map(([group, links]) => (
           <div key={group}>

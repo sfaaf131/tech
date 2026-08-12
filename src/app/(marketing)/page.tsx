@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ButtonLink, Kicker, Section } from "@/components/ui/page";
 import { audiences, saasPlans, serviceGroups, services } from "@/lib/catalog";
+import { clp } from "@/lib/format";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -17,43 +18,29 @@ const jsonLd = {
   email: site.email,
 };
 
-const fusion = [
+const faq = [
   {
-    side: "Incubación + IA",
-    source: "Inspirado en CEmprendedor",
-    points: [
-      "De una idea en lenguaje natural a un negocio estructurado.",
-      "Estrategia, mercado, finanzas y operaciones en un mismo agente.",
-      "Marketplace de socios para no emprender en solitario.",
-    ],
+    q: "¿Qué es una célula Kondax?",
+    a: "Un equipo estable de ingeniería — lead, desarrollo y, si hace falta, QA, ML o cumplimiento — que se queda con el dominio. No rotamos contratistas por ticket.",
   },
   {
-    side: "Ejecución técnica",
-    source: "Inspirado en Trio.dev",
-    points: [
-      "Células ágiles que se quedan con el problema, no tickets sueltos.",
-      "Ingeniería senior con seguridad y cumplimiento de origen.",
-      "Fábrica medible: horas, evidencias y continuidad de contexto.",
-    ],
+    q: "¿SaaS, horas o equity?",
+    a: "La incubadora y el Passport son suscripción. Construir producto se factura por hora. Si Kondax co-crea, entra al cap table. Las tres vías pueden convivir en el mismo proyecto.",
+  },
+  {
+    q: "¿Sirve para banca?",
+    a: "Sí. BPM, process mining, motores de riesgo, KYC/AML, RegTech y Open Banking. Las células de banca nacen con evidencia, cifrado y un asiento de cumplimiento.",
+  },
+  {
+    q: "¿Cómo entro?",
+    a: "Programadores con GitHub o GitLab. Fundadores, inversores y corporativos con LinkedIn. Passport no es un login decorativo: es la validación que abre marketplace, equity y consola.",
   },
 ];
 
-const revenue = [
-  {
-    code: "01",
-    name: "Suscripción SaaS",
-    text: "Acceso a incubadora, agentes, marketplace y Passport. Recurrencia para emprendedores y equipos.",
-  },
-  {
-    code: "02",
-    name: "Fábrica por hora",
-    text: "Células de ingeniería con tarifa clara. Producto, automatización y sistemas enterprise.",
-  },
-  {
-    code: "03",
-    name: "Sweat equity",
-    text: "Co-creación: Kondax pone célula y producto a cambio de participación en el proyecto.",
-  },
+const steps = [
+  ["01", "Passport", "Identidad técnica o comercial. Sin eso no hay matching ni sala de equity."],
+  ["02", "Cotiza o mide", "El cotizador arma la célula. El ROI muestra payback. Ambos se pueden sellar."],
+  ["03", "Ejecuta", "Incubadora para estructurar. Fábrica para construir. Co-creación cuando hay sociedad."],
 ];
 
 export default function HomePage() {
@@ -64,7 +51,7 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <section className="grid-bg grain relative overflow-hidden">
-        <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:grid-cols-[1.2fr_0.8fr] md:py-28">
+        <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:grid-cols-[1.15fr_0.85fr] md:py-28">
           <div>
             <Kicker>Kondax.tech · LatAm</Kicker>
             <h1 className="rise font-display mt-6 text-5xl leading-[0.95] font-semibold tracking-tight md:text-7xl">
@@ -80,26 +67,45 @@ export default function HomePage() {
                 Soy empresa o banca
               </ButtonLink>
             </div>
+            <p className="mt-8 font-mono text-[11px] tracking-[0.16em] text-copper uppercase">
+              TLS 1.3 · AES-256 · OAuth 2.0 · Logs inmutables
+            </p>
           </div>
           <div className="rise-2 grid grid-cols-2 gap-3 self-end">
             {[
-              ["SaaS", "Incubadora y agentes"],
-              ["Fábrica", "Células ágiles"],
-              ["Equity", "Proyectos co-creados"],
-              ["Banca", "Riesgo, KYC, AML"],
-            ].map(([title, text]) => (
-              <article key={title} className="cell p-5">
+              ["/modelo", "SaaS", "Incubadora y agentes"],
+              ["/fabrica", "Fábrica", "Células ágiles"],
+              ["/modelo", "Equity", "Proyectos co-creados"],
+              ["/enterprise", "Banca", "Riesgo, KYC, AML"],
+            ].map(([href, title, text]) => (
+              <Link key={title} href={href} className="cell block p-5">
                 <p className="font-mono text-[11px] tracking-[0.18em] text-copper uppercase">
                   {title}
                 </p>
                 <p className="mt-3 text-sm leading-6 text-paper">{text}</p>
-              </article>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
       <Section>
+        <Kicker>Cómo opera</Kicker>
+        <h2 className="font-display mt-4 max-w-3xl text-3xl font-semibold tracking-tight md:text-5xl">
+          Identidad, número, ejecución.
+        </h2>
+        <div className="mt-10 grid gap-4 md:grid-cols-3">
+          {steps.map(([n, title, text]) => (
+            <article key={n} className="cell p-6">
+              <p className="font-mono text-signal">{n}</p>
+              <h3 className="font-display mt-4 text-2xl">{title}</h3>
+              <p className="mt-3 text-sm leading-6 text-mist">{text}</p>
+            </article>
+          ))}
+        </div>
+      </Section>
+
+      <Section className="pt-0">
         <Kicker>Audiencias</Kicker>
         <h2 className="font-display mt-4 max-w-3xl text-3xl font-semibold tracking-tight md:text-5xl">
           Dos líneas. Un sistema.
@@ -124,23 +130,44 @@ export default function HomePage() {
 
       <section className="bg-paper text-ink">
         <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:grid-cols-2">
-          {fusion.map((column) => (
-            <div key={column.side}>
-              <p className="font-mono text-[11px] tracking-[0.22em] text-copper uppercase">
-                {column.source}
-              </p>
-              <h2 className="font-display mt-4 text-3xl font-semibold md:text-4xl">
-                {column.side}
-              </h2>
-              <ul className="mt-6 space-y-3 text-sm leading-6 text-ink/75">
-                {column.points.map((point) => (
-                  <li key={point} className="border-t border-ink/10 pt-3">
-                    {point}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <div>
+            <p className="font-mono text-[11px] tracking-[0.22em] text-copper uppercase">
+              Incubación
+            </p>
+            <h2 className="font-display mt-4 text-3xl font-semibold md:text-4xl">
+              Un cofundador de IA, no un PDF.
+            </h2>
+            <ul className="mt-6 space-y-3 text-sm leading-6 text-ink/75">
+              <li className="border-t border-ink/10 pt-3">
+                De una idea en lenguaje natural a un negocio estructurado.
+              </li>
+              <li className="border-t border-ink/10 pt-3">
+                Estrategia, mercado, finanzas y operaciones en un mismo agente.
+              </li>
+              <li className="border-t border-ink/10 pt-3">
+                Marketplace de socios con identidad validada.
+              </li>
+            </ul>
+          </div>
+          <div>
+            <p className="font-mono text-[11px] tracking-[0.22em] text-copper uppercase">
+              Fábrica
+            </p>
+            <h2 className="font-display mt-4 text-3xl font-semibold md:text-4xl">
+              Células que se quedan con el contexto.
+            </h2>
+            <ul className="mt-6 space-y-3 text-sm leading-6 text-ink/75">
+              <li className="border-t border-ink/10 pt-3">
+                Ingeniería senior con seguridad y cumplimiento de origen.
+              </li>
+              <li className="border-t border-ink/10 pt-3">
+                Horas medibles, evidencias y continuidad de dominio.
+              </li>
+              <li className="border-t border-ink/10 pt-3">
+                De un MVP a sistemas que mueven dinero.
+              </li>
+            </ul>
+          </div>
         </div>
       </section>
 
@@ -150,11 +177,15 @@ export default function HomePage() {
           Tres vías. Una marca.
         </h2>
         <div className="mt-10 grid gap-4 md:grid-cols-3">
-          {revenue.map((item) => (
-            <article key={item.code} className="cell p-6">
-              <p className="font-mono text-signal">{item.code}</p>
-              <h3 className="font-display mt-4 text-2xl">{item.name}</h3>
-              <p className="mt-3 text-sm leading-6 text-mist">{item.text}</p>
+          {[
+            ["01", "Suscripción SaaS", "Incubadora, agentes, marketplace y Passport. Recurrencia para emprendedores y equipos."],
+            ["02", "Fábrica por hora", "Células de ingeniería con tarifa clara. Producto, automatización y sistemas enterprise."],
+            ["03", "Sweat equity", "Co-creación: Kondax pone célula y producto a cambio de participación."],
+          ].map(([code, name, text]) => (
+            <article key={code} className="cell p-6">
+              <p className="font-mono text-signal">{code}</p>
+              <h3 className="font-display mt-4 text-2xl">{name}</h3>
+              <p className="mt-3 text-sm leading-6 text-mist">{text}</p>
             </article>
           ))}
         </div>
@@ -185,12 +216,13 @@ export default function HomePage() {
                 {services
                   .filter((service) => service.group === group.id)
                   .map((service) => (
-                    <span
+                    <Link
                       key={service.id}
-                      className="rounded-full border border-line px-3 py-1.5 text-sm"
+                      href="/cotizador"
+                      className="rounded-full border border-line px-3 py-1.5 text-sm hover:border-signal"
                     >
                       {service.name}
-                    </span>
+                    </Link>
                   ))}
               </div>
             </div>
@@ -199,16 +231,14 @@ export default function HomePage() {
       </Section>
 
       <section className="border-y border-line bg-ink-2">
-        <div className="mx-auto grid max-w-6xl gap-8 px-5 py-16 md:grid-cols-3">
-          {saasPlans.slice(0, 3).map((plan) => (
+        <div className="mx-auto grid max-w-6xl gap-8 px-5 py-16 sm:grid-cols-2 md:grid-cols-4">
+          {saasPlans.map((plan) => (
             <article key={plan.id}>
               <p className="font-mono text-[11px] tracking-[0.18em] text-copper uppercase">
                 {plan.name}
               </p>
               <p className="font-display mt-3 text-3xl">
-                {plan.priceClp
-                  ? plan.priceClp.toLocaleString("es-CL")
-                  : "A medida"}
+                {plan.priceClp ? clp(plan.priceClp) : "A medida"}
                 <span className="ml-1 text-base text-mist">/{plan.cadence}</span>
               </p>
               <p className="mt-2 text-sm text-mist">{plan.audience}</p>
@@ -224,7 +254,7 @@ export default function HomePage() {
             <h2 className="font-display mt-4 text-3xl">Arma la célula y el precio.</h2>
             <p className="mt-3 text-sm leading-6 text-mist">
               Audiencia, servicios, alcance y plazo. El cotizador estima horas, banda
-              de inversión y composición de la célula.
+              de inversión y composición de la célula. El enlace se puede compartir.
             </p>
             <div className="mt-6">
               <ButtonLink href="/cotizador">Cotizar un proyecto</ButtonLink>
@@ -234,8 +264,8 @@ export default function HomePage() {
             <Kicker>ROI corporativo</Kicker>
             <h2 className="font-display mt-4 text-3xl">Mide el retorno antes del sprint.</h2>
             <p className="mt-3 text-sm leading-6 text-mist">
-              FTE, errores, compliance e implementación. Payback y ahorro a 3 años
-              para pymes, corporaciones y banca.
+              Presets para pyme, corporación y banca. Payback, ahorro a 3 años y sello
+              de auditoría.
             </p>
             <div className="mt-6">
               <ButtonLink href="/roi" tone="ghost">
@@ -243,6 +273,24 @@ export default function HomePage() {
               </ButtonLink>
             </div>
           </article>
+        </div>
+      </Section>
+
+      <Section className="pt-0">
+        <Kicker>Preguntas</Kicker>
+        <h2 className="font-display mt-4 text-3xl md:text-4xl">Antes de entrar.</h2>
+        <div className="mt-8 divide-y divide-line border-y border-line">
+          {faq.map((item) => (
+            <details key={item.q} className="group py-5">
+              <summary className="cursor-pointer font-display text-xl">
+                {item.q}
+              </summary>
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-mist">{item.a}</p>
+            </details>
+          ))}
+        </div>
+        <div className="mt-10">
+          <ButtonLink href="/contacto">Hablar con Kondax</ButtonLink>
         </div>
       </Section>
     </>

@@ -12,7 +12,8 @@ function parseRole(value: FormDataEntryValue | null): RoleId {
 
 export async function enterPassport(formData: FormData) {
   const role = parseRole(formData.get("role"));
-  const name = String(formData.get("name") ?? "");
+  const name = String(formData.get("name") ?? "").trim();
+  if (name.length < 2) return;
   await signIn("passport-demo", {
     role,
     name,

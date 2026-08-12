@@ -12,7 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/cotizador",
     "/roi",
     "/passport",
-    "/seguridad",
+    "/contacto",
   ];
 
   return paths.map((path) => ({
