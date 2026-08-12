@@ -21,20 +21,21 @@ export const toolNav = [
 ] as const;
 
 export const footerNav = {
-  plataforma: [
+  Plataforma: [
     { href: "/incubadora", label: "Incubadora y marketplace" },
     { href: "/fabrica", label: "Fábrica de software" },
     { href: "/enterprise", label: "Pymes, corporaciones y banca" },
     { href: "/modelo", label: "Modelo y monetización" },
   ],
-  producto: [
+  Producto: [
     { href: "/servicios", label: "Matriz de servicios" },
     { href: "/cotizador", label: "Cotizador inteligente" },
     { href: "/roi", label: "Calculadora de ROI" },
     { href: "/passport", label: "Kondax Passport" },
   ],
-  confianza: [
+  Confianza: [
     { href: "/seguridad", label: "Seguridad y cumplimiento" },
+    { href: "/contacto", label: "Contacto" },
     { href: "/app", label: "Aplicación privada" },
   ],
 } as const;

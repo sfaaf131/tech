@@ -1,10 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import {
   audiences,
   saasPlans,
   scopes,
+  serviceGroups,
   services,
   timelines,
   type AudienceId,
@@ -14,35 +17,47 @@ import {
 } from "@/lib/catalog";
 import { usd, usdAsClp } from "@/lib/format";
 import { estimateQuote } from "@/lib/quote";
+import { parseQuoteParams, serializeQuoteParams } from "@/lib/quote-params";
 
 export function QuoteCalculator() {
-  const [audience, setAudience] = useState<AudienceId>("emprendedor");
-  const [serviceIds, setServiceIds] = useState<ServiceId[]>(["web", "agents"]);
-  const [scope, setScope] = useState<ScopeId>("mvp");
-  const [timeline, setTimeline] = useState<TimelineId>("8");
-  const [equity, setEquity] = useState(true);
+  return (
+    <Suspense fallback={<p className="text-mist">Cargando cotizador…</p>}>
+      <QuoteCalculatorInner />
+    </Suspense>
+  );
+}
+
+function QuoteCalculatorInner() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const initial = parseQuoteParams(searchParams);
+
+  const [audience, setAudience] = useState<AudienceId>(initial.audience ?? "emprendedor");
+  const [serviceIds, setServiceIds] = useState<ServiceId[]>(initial.serviceIds ?? ["web", "agents"]);
+  const [scope, setScope] = useState<ScopeId>(initial.scope ?? "mvp");
+  const [timeline, setTimeline] = useState<TimelineId>(initial.timeline ?? "8");
+  const [equity, setEquity] = useState(initial.equity ?? true);
   const [seal, setSeal] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  const result = useMemo(
-    () =>
-      estimateQuote({
-        audience,
-        serviceIds,
-        scope,
-        timeline,
-        equity,
-      }),
+  const input = useMemo(
+    () => ({ audience, serviceIds, scope, timeline, equity }),
     [audience, serviceIds, scope, timeline, equity],
   );
 
+  const result = useMemo(() => estimateQuote(input), [input]);
   const plan = saasPlans.find((item) => item.id === result.saasHint);
+
+  useEffect(() => {
+    const query = serializeQuoteParams(input);
+    router.replace(`${pathname}?${query}`, { scroll: false });
+  }, [input, pathname, router]);
 
   function toggle(id: ServiceId) {
     setServiceIds((current) =>
-      current.includes(id)
-        ? current.filter((item) => item !== id)
-        : [...current, id],
+      current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
     );
     setSeal(null);
   }
@@ -53,7 +68,7 @@ export function QuoteCalculator() {
       const response = await fetch("/api/cotizar", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ audience, serviceIds, scope, timeline, equity, result }),
+        body: JSON.stringify({ ...input, result }),
       });
       const data = (await response.json()) as { hash?: string };
       setSeal(data.hash ?? null);
@@ -61,6 +76,14 @@ export function QuoteCalculator() {
       setBusy(false);
     }
   }
+
+  async function copyLink() {
+    await navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1600);
+  }
+
+  const contactHref = `/contacto?origen=cotizador${seal ? `&sello=${seal}` : ""}`;
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
@@ -95,22 +118,32 @@ export function QuoteCalculator() {
           <legend className="font-mono text-[11px] tracking-[0.18em] text-copper uppercase">
             Servicios
           </legend>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {services.map((item) => {
-              const active = serviceIds.includes(item.id);
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => toggle(item.id)}
-                  className={`rounded-full border px-3 py-1.5 text-sm ${
-                    active ? "border-signal bg-signal text-signal-ink" : "border-line"
-                  }`}
-                >
-                  {item.name}
-                </button>
-              );
-            })}
+          <div className="mt-4 space-y-5">
+            {serviceGroups.map((group) => (
+              <div key={group.id}>
+                <p className="mb-2 text-xs text-mist">{group.label}</p>
+                <div className="flex flex-wrap gap-2">
+                  {services
+                    .filter((item) => item.group === group.id)
+                    .map((item) => {
+                      const active = serviceIds.includes(item.id);
+                      return (
+                        <button
+                          key={item.id}
+                          type="button"
+                          aria-pressed={active}
+                          onClick={() => toggle(item.id)}
+                          className={`rounded-full border px-3 py-1.5 text-sm ${
+                            active ? "border-signal bg-signal text-signal-ink" : "border-line"
+                          }`}
+                        >
+                          {item.name}
+                        </button>
+                      );
+                    })}
+                </div>
+              </div>
+            ))}
           </div>
         </fieldset>
 
@@ -172,7 +205,7 @@ export function QuoteCalculator() {
         </label>
       </form>
 
-      <aside className="cell p-6 md:p-8">
+      <aside className="cell h-fit p-6 lg:sticky lg:top-24 md:p-8">
         {serviceIds.length === 0 ? (
           <p className="text-mist">Elige al menos un servicio para estimar la célula.</p>
         ) : (
@@ -215,19 +248,31 @@ export function QuoteCalculator() {
                 <li key={note}>{note}</li>
               ))}
             </ul>
-            <button
-              type="button"
-              onClick={persist}
-              disabled={busy}
-              className="mt-8 rounded-full bg-signal px-5 py-2.5 text-sm font-medium text-signal-ink disabled:opacity-60"
-            >
-              {busy ? "Sellando…" : "Sellar cotización"}
-            </button>
+            <div className="mt-8 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={persist}
+                disabled={busy}
+                className="rounded-full bg-signal px-5 py-2.5 text-sm font-medium text-signal-ink disabled:opacity-60"
+              >
+                {busy ? "Sellando…" : "Sellar cotización"}
+              </button>
+              <button
+                type="button"
+                onClick={copyLink}
+                className="rounded-full border border-line px-5 py-2.5 text-sm"
+              >
+                {copied ? "Enlace copiado" : "Copiar enlace"}
+              </button>
+            </div>
             {seal ? (
               <p className="mt-4 break-all font-mono text-[11px] text-copper">
                 Sello SHA-256 {seal}
               </p>
             ) : null}
+            <Link href={contactHref} className="mt-6 inline-flex text-sm text-signal">
+              Enviar esta estimación a Kondax →
+            </Link>
           </>
         )}
       </aside>

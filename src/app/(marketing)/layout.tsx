@@ -5,8 +5,13 @@ import { SiteHeader } from "@/components/layout/site-header";
 export default function MarketingLayout({ children }: { children: ReactNode }) {
   return (
     <>
+      <a href="#contenido" className="skip-link">
+        Saltar al contenido
+      </a>
       <SiteHeader />
-      <main className="pt-16">{children}</main>
+      <main id="contenido" className="pt-16">
+        {children}
+      </main>
       <SiteFooter />
     </>
   );
