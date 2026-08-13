@@ -9,7 +9,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "rate_limited" }, { status: 429 });
   }
 
-  const parsed = contactSchema.safeParse(await request.json());
+  let body: Record<string, unknown>;
+  try {
+    body = (await request.json()) as Record<string, unknown>;
+  } catch {
+    return NextResponse.json({ error: "invalid_json" }, { status: 400 });
+  }
+  if (typeof body.company_website === "string" && body.company_website.trim()) {
+    return NextResponse.json({ id: "ok" });
+  }
+
+  const parsed = contactSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }

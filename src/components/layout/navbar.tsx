@@ -10,7 +10,7 @@ import { nav } from "@/lib/site";
 export function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const links = [...nav, { href: "/acceso", label: "Portal" }];
+  const links = [...nav, { href: "/acceso", label: "Entrar" }];
 
   useEffect(() => {
     if (!open) return;
@@ -26,7 +26,7 @@ export function Navbar() {
   }, [open]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border-b border-line bg-ink/80 backdrop-blur-xl">
+    <header className="fixed inset-x-0 top-0 z-40 border-b border-line bg-ink/85 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
         <Link href="/" onClick={() => setOpen(false)} aria-label="Kondax.tech inicio">
           <Logo />
@@ -42,12 +42,15 @@ export function Navbar() {
             </Link>
           ))}
         </nav>
-        <div className="hidden md:block">
+        <div className="hidden items-center gap-3 md:flex">
+          <Link href="/acceso" className="text-sm text-mist hover:text-paper">
+            Entrar
+          </Link>
           <Link
-            href="/acceso"
-            className="rounded-full bg-signal px-4 py-2 text-sm font-medium text-signal-ink"
+            href="/enterprise#contacto"
+            className="rounded-lg bg-signal px-3.5 py-2 text-sm font-medium text-signal-ink"
           >
-            Portal
+            Hablar con Kondax
           </Link>
         </div>
         <button
@@ -73,13 +76,20 @@ export function Navbar() {
                 href={item.href}
                 onClick={() => setOpen(false)}
                 className={cn(
-                  "rounded-xl px-3 py-3 text-sm",
+                  "rounded-lg px-3 py-3 text-sm",
                   pathname === item.href ? "bg-ink-3 text-paper" : "text-mist",
                 )}
               >
                 {item.label}
               </Link>
             ))}
+            <Link
+              href="/enterprise#contacto"
+              onClick={() => setOpen(false)}
+              className="mt-2 rounded-lg bg-signal px-3 py-3 text-center text-sm font-medium text-signal-ink"
+            >
+              Hablar con Kondax
+            </Link>
           </nav>
         </div>
       ) : null}

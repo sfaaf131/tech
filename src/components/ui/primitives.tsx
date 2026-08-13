@@ -16,10 +16,10 @@ export function Button({
   disabled?: boolean;
 }) {
   const className = cn(
-    "inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-medium transition-colors disabled:opacity-40",
+    "inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium transition-colors disabled:opacity-40",
     tone === "signal"
-      ? "bg-signal text-signal-ink hover:bg-paper"
-      : "border border-line text-paper hover:border-signal hover:text-signal",
+      ? "bg-signal text-signal-ink hover:bg-paper-2"
+      : "border border-line bg-ink-2 text-paper hover:border-paper/30",
   );
 
   if (href) {
@@ -47,7 +47,7 @@ export function Section({
   id?: string;
 }) {
   return (
-    <section id={id} className={cn("mx-auto max-w-6xl px-5 py-20", className)}>
+    <section id={id} className={cn("mx-auto max-w-6xl scroll-mt-24 px-5 py-20 md:py-24", className)}>
       {children}
     </section>
   );
@@ -55,7 +55,7 @@ export function Section({
 
 export function Kicker({ children }: { children: ReactNode }) {
   return (
-    <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-copper">
+    <p className="text-xs font-medium tracking-[0.14em] text-copper uppercase">
       {children}
     </p>
   );
@@ -69,4 +69,19 @@ export function Card({
   className?: string;
 }) {
   return <article className={cn("cell p-6 md:p-8", className)}>{children}</article>;
+}
+
+export function Status({ children, tone = "muted" }: { children: ReactNode; tone?: "done" | "live" | "muted" }) {
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium",
+        tone === "done" && "bg-ink-3 text-paper",
+        tone === "live" && "bg-paper text-ink",
+        tone === "muted" && "bg-ink-3 text-mist",
+      )}
+    >
+      {children}
+    </span>
+  );
 }

@@ -27,7 +27,7 @@ const steps = [
   {
     n: "04",
     title: "Construcción y despliegue",
-    text: "La misma factoría construye el MVP o la plataforma escalable. El fundador ve avance técnico en el portal de socio.",
+    text: "La misma factoría construye el MVP o la plataforma. El fundador ve avance técnico en el portal de socio.",
   },
 ];
 
@@ -42,46 +42,47 @@ const criteria = [
 export default function StartupsPage() {
   return (
     <>
-      <section className="grid-bg grain border-b border-line">
+      <section className="border-b border-line">
         <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
           <Kicker>Startups · Fundadores · Sweat equity</Kicker>
-          <h1 className="font-display mt-5 max-w-4xl text-4xl leading-[1.05] font-semibold md:text-6xl">
+          <h1 className="mt-5 max-w-4xl text-4xl leading-[1.08] font-semibold tracking-tight md:text-6xl">
             Socio tecnológico. No un equipo fantasma ni un PDF de consultoría.
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-mist">
-            Eliminamos el riesgo financiero técnico inicial: Kondax pone desarrollo,
-            diseño de producto y arquitectura de IA a cambio de participación accionaria.
-            Los intereses quedan alineados.
+            Kondax pone desarrollo, diseño de producto y arquitectura de IA a cambio de
+            participación accionaria. Los intereses quedan alineados.
           </p>
           <div className="mt-8">
-            <Button href="#postular">Postular mi Startup</Button>
+            <Button href="#postular">Postular mi startup</Button>
           </div>
         </div>
       </section>
 
       <Section>
         <Kicker>Co-inversión</Kicker>
-        <h2 className="font-display mt-4 text-3xl md:text-5xl">Cuatro pasos. Un cap table.</h2>
-        <div className="mt-10 grid gap-4 md:grid-cols-2">
+        <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Cuatro pasos. Un cap table.</h2>
+        <div className="mt-10 grid gap-10 md:grid-cols-2">
           {steps.map((step) => (
-            <Card key={step.n}>
-              <p className="font-mono text-signal">{step.n}</p>
-              <h3 className="font-display mt-3 text-2xl">{step.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-mist">{step.text}</p>
-            </Card>
+            <article key={step.n} className="grid grid-cols-[auto_1fr] gap-4">
+              <p className="text-sm font-medium text-copper">{step.n}</p>
+              <div>
+                <h3 className="text-xl font-semibold">{step.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-mist">{step.text}</p>
+              </div>
+            </article>
           ))}
         </div>
       </Section>
 
-      <section className="band border-y border-line">
+      <section className="border-y border-line bg-ink-2">
         <div className="mx-auto max-w-6xl px-5 py-20">
           <Kicker>Criterios de selección</Kicker>
-          <h2 className="font-display mt-4 max-w-3xl text-3xl md:text-4xl">
+          <h2 className="mt-4 max-w-3xl text-3xl font-semibold tracking-tight md:text-4xl">
             No incubamos por volumen. Elegimos dónde poner la célula.
           </h2>
-          <ul className="mt-8 max-w-3xl space-y-4 text-sm leading-7 text-mist">
+          <ul className="mt-8 max-w-3xl divide-y divide-line border-y border-line">
             {criteria.map((item) => (
-              <li key={item} className="border-t border-line pt-4">
+              <li key={item} className="py-4 text-sm leading-7 text-mist">
                 {item}
               </li>
             ))}
@@ -90,13 +91,13 @@ export default function StartupsPage() {
       </section>
 
       <Section id="postular">
-        <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
           <div>
             <Kicker>Postulación</Kicker>
-            <h2 className="font-display mt-4 text-3xl md:text-4xl">Cuéntanos la idea.</h2>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Cuéntanos la idea.</h2>
             <p className="mt-4 text-sm leading-7 text-mist">
-              Si hay encaje, proponemos hitos y un porcentaje. Si no, lo decimos pronto.
-              El portal de socio se abre cuando hay acuerdo, no antes.
+              Si hay encaje, proponemos hitos y un porcentaje. Si no, lo decimos pronto. El
+              portal de socio se abre cuando hay acuerdo.
             </p>
           </div>
           <Card>
