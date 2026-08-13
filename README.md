@@ -2,7 +2,7 @@
 
 Factoría de software, inteligencia artificial y venture studio.
 
-- **Enterprise (B2B y pymes):** células de ingeniería, agentes de IA y RPA. Cobro por hora, sprint o proyecto.
+- **Enterprise (B2B y pymes):** process mining, RPA, agentes de IA, analítica, integración y células de ingeniería. Cobro por hora, sprint o proyecto.
 - **Venture (fundadores):** socio tecnológico a cambio de sweat equity.
 
 Sitio: [kondax.tech](https://kondax.tech)

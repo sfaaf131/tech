@@ -27,7 +27,7 @@ const steps = [
   {
     n: "04",
     title: "Construcción y despliegue",
-    text: "La misma factoría construye el MVP o la plataforma. El fundador ve avance técnico en el portal de socio.",
+    text: "La misma factoría construye el MVP o la plataforma. Si el producto es operación —flujo, agentes, RPA— entra el mismo método que usamos en B2B. El fundador ve avance en el portal de socio.",
   },
 ];
 

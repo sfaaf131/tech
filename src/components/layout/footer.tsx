@@ -14,6 +14,11 @@ export function Footer() {
           <p className="text-xs font-medium tracking-[0.14em] text-copper uppercase">Empresa</p>
           <ul className="mt-4 space-y-2 text-sm">
             <li>
+              <Link href="/enterprise#servicios" className="text-mist hover:text-paper">
+                Servicios
+              </Link>
+            </li>
+            <li>
               <Link href="/enterprise" className="text-mist hover:text-paper">
                 Enterprise
               </Link>

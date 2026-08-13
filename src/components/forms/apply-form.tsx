@@ -17,34 +17,39 @@ export function ApplyForm() {
     setStatus("busy");
     setDetail(null);
     setFields({});
-    const response = await fetch("/api/apply", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    const payload = (await response.json().catch(() => null)) as {
-      id?: string;
-      error?: { fieldErrors?: FieldErrors } | string;
-    } | null;
-    if (!response.ok) {
-      setStatus("error");
-      if (payload?.error && typeof payload.error === "object") {
-        setFields(payload.error.fieldErrors ?? {});
-        setDetail("Revisa los campos marcados.");
-      } else if (response.status === 429) {
-        setDetail("Demasiadas solicitudes. Espera unos minutos.");
-      } else {
-        setDetail("No pudimos recibir la postulación. Inténtalo otra vez.");
+    try {
+      const response = await fetch("/api/apply", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const payload = (await response.json().catch(() => null)) as {
+        id?: string;
+        error?: { fieldErrors?: FieldErrors } | string;
+      } | null;
+      if (!response.ok) {
+        setStatus("error");
+        if (payload?.error && typeof payload.error === "object") {
+          setFields(payload.error.fieldErrors ?? {});
+          setDetail("Revisa los campos marcados.");
+        } else if (response.status === 429) {
+          setDetail("Demasiadas solicitudes. Espera unos minutos.");
+        } else {
+          setDetail("No pudimos recibir la postulación. Inténtalo otra vez.");
+        }
+        return;
       }
-      return;
+      setStatus("ok");
+      setDetail(
+        payload?.id
+          ? `Expediente ${payload.id}. Evaluamos viabilidad técnica y encaje.`
+          : "Postulación recibida.",
+      );
+      form.reset();
+    } catch {
+      setStatus("error");
+      setDetail("No hay conexión. Inténtalo otra vez.");
     }
-    setStatus("ok");
-    setDetail(
-      payload?.id
-        ? `Expediente ${payload.id}. Evaluamos viabilidad técnica y encaje.`
-        : "Postulación recibida.",
-    );
-    form.reset();
   }
 
   return (

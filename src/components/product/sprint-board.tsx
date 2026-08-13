@@ -23,9 +23,10 @@ export function SprintBoard({
         </div>
         <Status tone="live">{project.kind === "startup" ? "Socio" : "Cliente B2B"}</Status>
       </header>
-      <div className={`grid gap-3 p-3 sm:grid-cols-3 ${compact ? "max-h-[420px] overflow-hidden" : ""}`}>
+      <div className="grid gap-3 p-3 sm:grid-cols-3">
         {columns.map((column) => {
           const items = project.sprints.filter((sprint) => sprint.status === column.id);
+          const shown = compact ? items.slice(0, 1) : items;
           return (
             <div key={column.id} className="min-w-0">
               <p className="px-1 pb-2 text-xs font-medium text-mist">
@@ -33,7 +34,7 @@ export function SprintBoard({
                 <span className="ml-1 text-copper">{items.length}</span>
               </p>
               <div className="space-y-2">
-                {items.map((sprint) => (
+                {shown.map((sprint) => (
                   <article key={sprint.name} className="rounded-xl border border-line bg-ink px-3 py-3">
                     <p className="text-sm font-medium leading-5">{sprint.name}</p>
                     <p className="mt-1 text-xs leading-5 text-mist">{sprint.deliverable}</p>

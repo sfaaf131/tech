@@ -26,6 +26,8 @@ export const metadata: Metadata = {
     "Kondax",
     "factoría de software",
     "células de ingeniería",
+    "process mining",
+    "BPM",
     "agentes de IA",
     "RPA",
     "sweat equity",

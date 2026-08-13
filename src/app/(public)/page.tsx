@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button, Kicker, Section } from "@/components/ui/primitives";
 import { SprintBoard } from "@/components/product/sprint-board";
 import { demoProjects } from "@/lib/portfolio";
+import { deliverySteps, services } from "@/lib/services";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -18,44 +19,18 @@ const jsonLd = {
   email: site.email,
 };
 
-const steps = [
-  {
-    n: "01",
-    title: "Entender el proceso",
-    text: "Mapeamos operación, sistemas y criterio de done. Sin eso no hay sprint ni equity.",
-  },
-  {
-    n: "02",
-    title: "Armar la célula",
-    text: "Lead, ingeniería, IA o QA según el trabajo. Un equipo que se queda con el dominio.",
-  },
-  {
-    n: "03",
-    title: "Construir a la vista",
-    text: "El portal muestra sprints, horas e hitos. El cliente o el socio ve el producto, no un status deck.",
-  },
-  {
-    n: "04",
-    title: "Operar o co-crear",
-    text: "B2B se factura por hora, sprint o proyecto. Startups firman sweat equity atado a entregables.",
-  },
-];
-
-const services = [
-  ["Agentes de IA", "Atención, análisis documental y procesamiento de datos, con supervisión humana."],
-  ["RPA y process mining", "Tareas repetitivas sobre sistemas que ya existen, sin reescribir el core."],
-  ["Web y móvil", "Productos transaccionales, portales y apps listos para crecer."],
-  ["Nube y operación", "Arquitectura, despliegue y una célula que no desaparece al entregar."],
-];
-
 const faq = [
+  {
+    q: "¿Por dónde empiezan?",
+    a: "Por el flujo. Mapeamos el proceso, medimos cuellos de botella y recién ahí proponemos RPA, un agente o una célula. Un bot sin mapa solo acelera el desorden.",
+  },
   {
     q: "¿Cobran por hora o por proyecto?",
     a: "En Enterprise, las tres: hora, sprint o proyecto cerrado. La banda sube con criticidad. En Venture no hay factura de horas: hay participación atada a hitos.",
   },
   {
     q: "¿Qué entra en una célula?",
-    a: "Un lead y la ingeniería que el trabajo pide. Si hay automatización, suma IA. Si hay banca o dinero, suma QA y cumplimiento.",
+    a: "Un lead y la ingeniería que el trabajo pide. Si hay automatización, suma IA. Si hay dinero o cumplimiento, suma QA. El cliente ve horas y entregables en el portal.",
   },
   {
     q: "¿Cómo se define el equity?",
@@ -77,12 +52,13 @@ export default function HomePage() {
           <div>
             <Kicker>Factoría de software · IA · Venture studio</Kicker>
             <h1 className="mt-5 text-4xl leading-[1.08] font-semibold tracking-tight md:text-5xl lg:text-[3.35rem]">
-              Ingeniería de software e inteligencia artificial para empresas.
-              <span className="mt-3 block text-mist">Co-inversión técnica para startups.</span>
+              Operación con flujo. Software que lo sostiene.
+              <span className="mt-3 block text-mist">Células para empresas. Equity para founders.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-mist">
-              Desarrollamos tecnología avanzada para modernizar tu negocio e invertimos nuestro
-              equipo técnico en los proyectos del futuro.
+              Kondax mapea cómo trabaja tu empresa, automatiza lo repetible, pone inteligencia
+              donde hay decisión e instala una célula de ingeniería. Para pymes y corporativos,
+              por hora o por proyecto. Para founders, a cambio de participación.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button href="/enterprise">Ver soluciones corporativas</Button>
@@ -107,7 +83,7 @@ export default function HomePage() {
               Potencia tu operación con células de software e IA ágiles.
             </h3>
             <p className="mt-3 text-sm leading-6 text-mist">
-              Agentes, RPA y producto con horas visibles. Agilidad, menor costo operativo y
+              Empezamos por el proceso. Después RPA, agentes y producto, con horas visibles y
               sistemas que se pueden auditar.
             </p>
           </Link>
@@ -117,22 +93,24 @@ export default function HomePage() {
               Construimos tu producto a cambio de capital social.
             </h3>
             <p className="mt-3 text-sm leading-6 text-mist">
-              El fundador aporta industria. Kondax aporta equipo senior, producto y arquitectura
-              de IA. Los intereses quedan alineados.
+              El fundador aporta industria. Kondax aporta la misma fábrica: producto, flujo e IA.
+              Los intereses quedan alineados.
             </p>
           </Link>
         </div>
       </Section>
 
-      <section className="border-y border-line bg-ink-2">
+      <section id="metodo" className="scroll-mt-24 border-y border-line bg-ink-2">
         <div className="mx-auto max-w-6xl px-5 py-20 md:py-24">
-          <Kicker>Cómo opera</Kicker>
+          <Kicker>Método</Kicker>
           <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-tight md:text-4xl">
-            Cuatro cosas, un sistema.
+            Empezamos por el flujo, no por la herramienta.
           </h2>
-          <p className="mt-3 max-w-xl text-mist">Así se ve una semana de trabajo en Kondax.</p>
+          <p className="mt-3 max-w-xl text-mist">
+            El orden de trabajo es siempre el mismo: entender, automatizar, decidir, sostener.
+          </p>
           <div className="mt-12 grid gap-10 md:grid-cols-2">
-            {steps.map((step) => (
+            {deliverySteps.map((step) => (
               <article key={step.n} className="grid grid-cols-[auto_1fr] gap-4">
                 <p className="text-sm font-medium text-copper">{step.n}</p>
                 <div>
@@ -145,19 +123,34 @@ export default function HomePage() {
         </div>
       </section>
 
-      <Section>
-        <Kicker>Capacidades</Kicker>
+      <Section id="servicios">
+        <Kicker>Servicios</Kicker>
         <h2 className="mt-4 max-w-3xl text-3xl font-semibold tracking-tight md:text-4xl">
-          Lo que una célula Kondax sabe hacer.
+          El catálogo sigue el flujo operativo.
         </h2>
+        <p className="mt-3 max-w-2xl text-mist">
+          No hace falta contratarlo todo. Lo habitual es un mapa de proceso y un cuello de
+          botella. El resto entra cuando el flujo ya está claro.
+        </p>
         <div className="mt-10 divide-y divide-line border-y border-line">
-          {services.map(([title, text]) => (
-            <div key={title} className="grid gap-2 py-6 md:grid-cols-[280px_1fr]">
-              <h3 className="text-lg font-semibold">{title}</h3>
-              <p className="text-sm leading-6 text-mist">{text}</p>
+          {services.map((item) => (
+            <div key={item.id} className="grid gap-2 py-6 md:grid-cols-[7rem_220px_1fr] md:items-baseline">
+              <p className="text-sm font-medium text-copper">{item.n}</p>
+              <div>
+                <h3 className="text-lg font-semibold">{item.name}</h3>
+                <p className="mt-1 text-xs font-medium tracking-[0.14em] text-copper uppercase">
+                  {item.tag}
+                </p>
+              </div>
+              <p className="text-sm leading-6 text-mist">{item.blurb}</p>
             </div>
           ))}
         </div>
+        <p className="mt-6 text-sm">
+          <Link href="/enterprise#servicios" className="font-medium text-paper hover:underline">
+            Ver detalle corporativo →
+          </Link>
+        </p>
       </Section>
 
       <section className="border-y border-line bg-ink-2">

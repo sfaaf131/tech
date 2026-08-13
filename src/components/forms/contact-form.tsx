@@ -2,13 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/primitives";
-
-const needs = [
-  { id: "agentes", label: "Agentes de IA" },
-  { id: "rpa", label: "RPA y process mining" },
-  { id: "celulas", label: "Célula de ingeniería" },
-  { id: "otro", label: "Otra necesidad" },
-] as const;
+import { contactNeeds } from "@/lib/services";
 
 type FieldErrors = Record<string, string[] | undefined>;
 
@@ -24,30 +18,35 @@ export function ContactForm() {
     setStatus("busy");
     setDetail(null);
     setFields({});
-    const response = await fetch("/api/contact", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    const payload = (await response.json().catch(() => null)) as {
-      id?: string;
-      error?: { fieldErrors?: FieldErrors } | string;
-    } | null;
-    if (!response.ok) {
-      setStatus("error");
-      if (payload?.error && typeof payload.error === "object") {
-        setFields(payload.error.fieldErrors ?? {});
-        setDetail("Revisa los campos marcados.");
-      } else if (response.status === 429) {
-        setDetail("Demasiadas solicitudes. Espera unos minutos.");
-      } else {
-        setDetail("No pudimos recibir la solicitud. Inténtalo otra vez.");
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const payload = (await response.json().catch(() => null)) as {
+        id?: string;
+        error?: { fieldErrors?: FieldErrors } | string;
+      } | null;
+      if (!response.ok) {
+        setStatus("error");
+        if (payload?.error && typeof payload.error === "object") {
+          setFields(payload.error.fieldErrors ?? {});
+          setDetail("Revisa los campos marcados.");
+        } else if (response.status === 429) {
+          setDetail("Demasiadas solicitudes. Espera unos minutos.");
+        } else {
+          setDetail("No pudimos recibir la solicitud. Inténtalo otra vez.");
+        }
+        return;
       }
-      return;
+      setStatus("ok");
+      setDetail(payload?.id ? `Referencia ${payload.id}. Te escribimos a tu correo.` : "Recibido.");
+      form.reset();
+    } catch {
+      setStatus("error");
+      setDetail("No hay conexión. Inténtalo otra vez.");
     }
-    setStatus("ok");
-    setDetail(payload?.id ? `Referencia ${payload.id}. Te escribimos a tu correo.` : "Recibido.");
-    form.reset();
   }
 
   return (
@@ -76,20 +75,20 @@ export function ContactForm() {
           <input name="role" className="field mt-2 font-normal" autoComplete="organization-title" />
         </label>
       </div>
-      <fieldset>
-        <legend className="text-sm font-medium">Qué necesitas</legend>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {needs.map((need) => (
-            <label key={need.id} className="cursor-pointer">
-              <input type="radio" name="need" value={need.id} required className="peer sr-only" />
-              <span className="inline-block rounded-lg border border-line px-3 py-1.5 text-sm font-normal peer-checked:border-paper peer-checked:bg-paper peer-checked:text-ink">
-                {need.label}
-              </span>
-            </label>
+      <label className="block text-sm font-medium">
+        Qué necesitas
+        <select required name="need" defaultValue="" className="field mt-2 font-normal">
+          <option value="" disabled>
+            Selecciona un servicio
+          </option>
+          {contactNeeds.map((need) => (
+            <option key={need.id} value={need.id}>
+              {need.label}
+            </option>
           ))}
-        </div>
+        </select>
         {fields.need ? <p className="mt-1 text-xs text-danger">{fields.need[0]}</p> : null}
-      </fieldset>
+      </label>
       <label className="block text-sm font-medium">
         Contexto
         <textarea

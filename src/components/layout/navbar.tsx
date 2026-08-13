@@ -11,6 +11,7 @@ export function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const links = [...nav, { href: "/acceso", label: "Entrar" }];
+  const isCurrent = (href: string) => pathname === href.split("#")[0] && !href.includes("#");
 
   useEffect(() => {
     if (!open) return;
@@ -36,7 +37,7 @@ export function Navbar() {
             <Link
               key={item.href}
               href={item.href}
-              className={cn("transition-colors hover:text-paper", pathname === item.href && "text-paper")}
+              className={cn("transition-colors hover:text-paper", isCurrent(item.href) && "text-paper")}
             >
               {item.label}
             </Link>
@@ -77,7 +78,7 @@ export function Navbar() {
                 onClick={() => setOpen(false)}
                 className={cn(
                   "rounded-lg px-3 py-3 text-sm",
-                  pathname === item.href ? "bg-ink-3 text-paper" : "text-mist",
+                  isCurrent(item.href) ? "bg-ink-3 text-paper" : "text-mist",
                 )}
               >
                 {item.label}
