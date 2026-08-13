@@ -27,7 +27,15 @@ export default async function ProyectosPage() {
       </p>
       <div className="mt-8 space-y-8">
         {projects.map((project) => (
-          <SprintBoard key={project.id} project={project} />
+          <div key={project.id} className="space-y-3">
+            <p className="max-w-2xl text-sm leading-6 text-mist">{project.summary}</p>
+            <p className="text-xs text-copper">
+              {portal === "startup"
+                ? project.equity
+                : `${project.cell} · ${project.hoursMonth ?? 0} h este mes`}
+            </p>
+            <SprintBoard project={project} />
+          </div>
         ))}
       </div>
     </div>

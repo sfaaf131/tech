@@ -19,39 +19,48 @@ export type DemoProject = {
   sprints: Sprint[];
 };
 
+export const portalPaths = ["/dashboard", "/proyectos"] as const;
+export type PortalPath = (typeof portalPaths)[number];
+
+export function safePortalPath(value: unknown): PortalPath {
+  if (typeof value !== "string") return "/dashboard";
+  const path = value.split("?")[0];
+  return (portalPaths as readonly string[]).includes(path) ? (path as PortalPath) : "/dashboard";
+}
+
 export const demoProjects: DemoProject[] = [
   {
     id: "onboarding-banca",
     name: "Motor de onboarding",
     kind: "b2b",
-    status: "Sprint 3 de 6",
+    status: "Paso 3 de 4 · Poner inteligencia",
     summary:
-      "Célula dedicada para un banco regional: KYC, expedientes y handoff al core. Horas medibles, evidencias por sprint.",
+      "Célula sobre un flujo de onboarding: mapa, RPA, agente documental y equipo que se queda con el dominio. Horas de capacidad, no un estado de cuenta.",
     cell: "Lead · 2 ingeniería · QA",
     hoursMonth: 142,
     sprints: [
       {
-        name: "01 · Descubrimiento",
+        name: "01 · Mapear el flujo",
         status: "hecho",
-        deliverable: "Mapa de proceso, riesgos y criterio de done.",
+        deliverable: "Mapa as-is de KYC, dueños, tiempos y criterio de done.",
         hours: 48,
       },
       {
-        name: "02 · Identidad",
+        name: "02 · Automatizar lo repetible",
         status: "hecho",
-        deliverable: "Flujo de captura, validación documental y pistas de auditoría.",
+        deliverable: "RPA de captura y validación documental sobre el core legado.",
         hours: 120,
       },
       {
-        name: "03 · Orquestación",
+        name: "03 · Poner inteligencia",
         status: "en curso",
-        deliverable: "Agente de análisis documental + RPA sobre el core legado.",
+        deliverable: "Agente de análisis de expedientes con handoff a un humano.",
         hours: 142,
       },
       {
-        name: "04 · Integración",
+        name: "04 · Instalar la célula",
         status: "siguiente",
-        deliverable: "API hacia el core y ambientes segregados.",
+        deliverable: "Lead + ingeniería + QA en el dominio; evidencias en el portal.",
       },
     ],
   },
@@ -59,30 +68,30 @@ export const demoProjects: DemoProject[] = [
     id: "logistica-pymes",
     name: "Plataforma de logística",
     kind: "startup",
-    status: "MVP 70%",
+    status: "Hito 2 de 4 · Automatizar lo repetible",
     summary:
-      "Kondax actúa como socio tecnológico. El fundador aporta industria; la célula construye producto y arquitectura de IA.",
+      "Kondax entra como socio técnico. El fundador aporta industria; la célula construye el producto con el mismo método que en empresas.",
     equity: "12% reservado a Kondax · hito 2 de 4",
     sprints: [
       {
-        name: "Hito 1 · Fundación",
+        name: "01 · Mapear el flujo",
         status: "hecho",
-        deliverable: "Identidad, arquitectura, diseño de producto y repositorio.",
+        deliverable: "Identidad, arquitectura y mapa del operador logístico.",
       },
       {
-        name: "Hito 2 · MVP operable",
+        name: "02 · Automatizar lo repetible",
         status: "en curso",
-        deliverable: "Órdenes, tracking y panel del operador.",
+        deliverable: "Órdenes, tracking y panel del operador — MVP operable.",
       },
       {
-        name: "Hito 3 · Automatización",
+        name: "03 · Poner inteligencia",
         status: "siguiente",
-        deliverable: "Agente de ruteo y alertas operativas.",
+        deliverable: "Agente de ruteo y alertas; una persona supervisa.",
       },
       {
-        name: "Hito 4 · Escala",
+        name: "04 · Instalar la célula",
         status: "siguiente",
-        deliverable: "Pagos, SLA y despliegue productivo.",
+        deliverable: "Equipo senior queda con el producto. Hito de equity desbloqueado.",
       },
     ],
   },

@@ -28,9 +28,12 @@ export function Sidebar({ name, portal }: { name: string; portal: string }) {
           <Link
             key={item.href}
             href={item.href}
+            aria-current={pathname === item.href ? "page" : undefined}
             className={cn(
-              "rounded-lg px-3 py-2 text-sm whitespace-nowrap",
-              pathname === item.href ? "bg-ink-3 text-paper" : "text-mist hover:text-paper",
+              "rounded-lg px-3 py-2.5 text-sm whitespace-nowrap",
+              pathname === item.href
+                ? "bg-ink-3 font-medium text-paper"
+                : "text-mist hover:bg-ink hover:text-paper",
             )}
           >
             {item.label}
@@ -44,7 +47,7 @@ export function Sidebar({ name, portal }: { name: string; portal: string }) {
             Sitio público
           </Link>
           <form action={leavePortal}>
-            <button type="submit" className="text-mist hover:text-paper">
+            <button type="submit" className="text-left text-mist hover:text-paper">
               Salir
             </button>
           </form>

@@ -1,14 +1,13 @@
 "use server";
 
 import { signIn, signOut } from "@/auth";
+import { safePortalPath } from "@/lib/portfolio";
 
 export async function enterPortal(formData: FormData) {
-  const raw = String(formData.get("next") ?? "/dashboard");
-  const redirectTo = raw.startsWith("/") && !raw.startsWith("//") ? raw : "/dashboard";
   await signIn("portal", {
     name: formData.get("name"),
     portal: formData.get("portal"),
-    redirectTo,
+    redirectTo: safePortalPath(formData.get("next")),
   });
 }
 

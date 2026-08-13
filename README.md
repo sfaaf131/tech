@@ -2,8 +2,8 @@
 
 Factoría de software, inteligencia artificial y venture studio.
 
-- **Enterprise (B2B y pymes):** process mining, RPA, agentes de IA, analítica, integración y células de ingeniería. Cobro por hora, sprint o proyecto.
-- **Venture (fundadores):** socio tecnológico a cambio de sweat equity.
+- **Empresas (B2B y pymes):** process mining, RPA, agentes de IA, analítica, integración y células de ingeniería. Cobro por hora, sprint o proyecto.
+- **Fundadores:** socio tecnológico a cambio de sweat equity.
 
 Sitio: [kondax.tech](https://kondax.tech)
 
@@ -12,8 +12,8 @@ Sitio: [kondax.tech](https://kondax.tech)
 | Ruta | Qué es |
 | --- | --- |
 | `/` | Inicio: dos líneas, servicios, modelo |
-| `/enterprise` | Factoría B2B + formulario comercial |
-| `/startups` | Sweat equity + postulación |
+| `/enterprise` | Empresas: catálogo + pedir alcance |
+| `/startups` | Fundadores: criterios + postulación |
 | `/acceso` | Entrada al portal |
 | `/dashboard` | Resumen (cliente o socio) |
 | `/proyectos` | Sprints y entregables |

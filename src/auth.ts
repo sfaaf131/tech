@@ -74,6 +74,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (account?.provider === "github") {
         token.portal = token.portal ?? "b2b";
       }
+      token.portal = asPortal(token.portal);
       return token;
     },
     session({ session, token }) {

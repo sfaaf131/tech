@@ -3,7 +3,7 @@ import { ApplyForm } from "@/components/forms/apply-form";
 import { Button, Card, Kicker, Section } from "@/components/ui/primitives";
 
 export const metadata: Metadata = {
-  title: "Venture Building",
+  title: "Fundadores",
   description:
     "Kondax como socio tecnológico: equipo senior de software, producto e IA a cambio de sweat equity.",
 };
@@ -12,7 +12,7 @@ const steps = [
   {
     n: "01",
     title: "Postulación",
-    text: "Presentas el proyecto, la validación comercial y el perfil del fundador. Industria primero; el pitch deck después.",
+    text: "Industria, tracción y qué debe construir la célula. El deck es opcional; sin señal comercial no avanzamos.",
   },
   {
     n: "02",
@@ -32,11 +32,12 @@ const steps = [
 ];
 
 const criteria = [
-  "Fundador con conocimiento real de industria, no solo una tesis de mercado.",
-  "Problema caro, frecuente y que software o IA puede mover.",
-  "Camino comercial creíble: clientes, cartas de intención o acceso al canal.",
-  "Alcance que una célula senior puede ejecutar en hitos, no un rediseño infinito.",
-  "Disposición a ceder participación a cambio de ejecución técnica de verdad.",
+  "Fundador que ya opera o vendió en esa industria. Una tesis de mercado no basta.",
+  "Problema caro y frecuente, que software, RPA o IA puede mover en hitos.",
+  "Señal comercial: clientes, cartas de intención, o acceso real al canal.",
+  "Alcance que una célula senior cierra por hitos. No un rediseño infinito.",
+  "Disposición a ceder participación. Kondax no descuenta horas: entra como socio.",
+  "No entra: pedido de MVP barato, equity simbólico, o un CTO que no se queda.",
 ];
 
 export default function StartupsPage() {
@@ -44,16 +45,16 @@ export default function StartupsPage() {
     <>
       <section className="border-b border-line">
         <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
-          <Kicker>Startups · Fundadores · Sweat equity</Kicker>
+          <Kicker>Fundadores · Sweat equity · Misma fábrica</Kicker>
           <h1 className="mt-5 max-w-4xl text-4xl leading-[1.08] font-semibold tracking-tight md:text-6xl">
-            Socio tecnológico. No un equipo fantasma ni un PDF de consultoría.
+            Kondax entra al cap table. Tú pones la industria; nosotros el software.
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-mist">
-            Kondax pone desarrollo, diseño de producto y arquitectura de IA a cambio de
-            participación accionaria. Los intereses quedan alineados.
+            No hay factura de horas. Hay contrato con porcentaje atado a hitos de software. Si
+            buscas un equipo a descuento, no hay encaje.
           </p>
           <div className="mt-8">
-            <Button href="#postular">Postular mi startup</Button>
+            <Button href="#postular">Postular — industria y tracción primero</Button>
           </div>
         </div>
       </section>
@@ -74,30 +75,30 @@ export default function StartupsPage() {
         </div>
       </Section>
 
-      <section className="border-y border-line bg-ink-2">
-        <div className="mx-auto max-w-6xl px-5 py-20">
-          <Kicker>Criterios de selección</Kicker>
-          <h2 className="mt-4 max-w-3xl text-3xl font-semibold tracking-tight md:text-4xl">
-            No incubamos por volumen. Elegimos dónde poner la célula.
-          </h2>
-          <ul className="mt-8 max-w-3xl divide-y divide-line border-y border-line">
-            {criteria.map((item) => (
-              <li key={item} className="py-4 text-sm leading-7 text-mist">
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      <Section band>
+        <Kicker>Criterios de selección</Kicker>
+        <h2 className="mt-4 max-w-3xl text-3xl font-semibold tracking-tight md:text-4xl">
+          Si no hay industria ni tracción, no hay célula.
+        </h2>
+        <ul className="mt-8 max-w-3xl divide-y divide-line border-y border-line">
+          {criteria.map((item) => (
+            <li key={item} className="py-4 text-sm leading-7 text-mist">
+              {item}
+            </li>
+          ))}
+        </ul>
+      </Section>
 
       <Section id="postular">
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
           <div>
             <Kicker>Postulación</Kicker>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Cuéntanos la idea.</h2>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">
+              Industria, tracción y el hito de software.
+            </h2>
             <p className="mt-4 text-sm leading-7 text-mist">
-              Si hay encaje, proponemos hitos y un porcentaje. Si no, lo decimos pronto. El
-              portal de socio se abre cuando hay acuerdo.
+              Si hay encaje, respondemos con hitos y un rango de participación. Si no, lo decimos
+              pronto. El portal de socio se abre cuando hay contrato, no antes.
             </p>
           </div>
           <Card>

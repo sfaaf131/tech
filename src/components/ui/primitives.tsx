@@ -8,30 +8,33 @@ export function Button({
   tone = "signal",
   type,
   disabled,
+  className,
 }: {
   href?: string;
   children: ReactNode;
   tone?: "signal" | "ghost";
   type?: "button" | "submit";
   disabled?: boolean;
+  className?: string;
 }) {
-  const className = cn(
+  const classes = cn(
     "inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium transition-colors disabled:opacity-40",
     tone === "signal"
       ? "bg-signal text-signal-ink hover:bg-paper-2"
-      : "border border-line bg-ink-2 text-paper hover:border-paper/30",
+      : "border border-line bg-ink-2 text-paper hover:border-paper/30 hover:bg-ink",
+    className,
   );
 
   if (href) {
     return (
-      <Link href={href} className={className}>
+      <Link href={href} className={classes}>
         {children}
       </Link>
     );
   }
 
   return (
-    <button type={type ?? "button"} className={className} disabled={disabled}>
+    <button type={type ?? "button"} className={classes} disabled={disabled}>
       {children}
     </button>
   );
@@ -41,13 +44,23 @@ export function Section({
   children,
   className,
   id,
+  band = false,
 }: {
   children: ReactNode;
   className?: string;
   id?: string;
+  band?: boolean;
 }) {
+  if (band) {
+    return (
+      <section id={id} className={cn("scroll-mt-24 border-y border-line bg-ink-2", className)}>
+        <div className="mx-auto max-w-6xl px-5 py-16 md:py-24">{children}</div>
+      </section>
+    );
+  }
+
   return (
-    <section id={id} className={cn("mx-auto max-w-6xl scroll-mt-24 px-5 py-20 md:py-24", className)}>
+    <section id={id} className={cn("mx-auto max-w-6xl scroll-mt-24 px-5 py-16 md:py-24", className)}>
       {children}
     </section>
   );
@@ -55,7 +68,7 @@ export function Section({
 
 export function Kicker({ children }: { children: ReactNode }) {
   return (
-    <p className="text-xs font-medium tracking-[0.14em] text-copper uppercase">
+    <p className="text-[0.8125rem] font-medium tracking-[0.12em] text-copper uppercase">
       {children}
     </p>
   );
@@ -64,11 +77,23 @@ export function Kicker({ children }: { children: ReactNode }) {
 export function Card({
   children,
   className,
+  href,
 }: {
   children: ReactNode;
   className?: string;
+  href?: string;
 }) {
-  return <article className={cn("cell p-6 md:p-8", className)}>{children}</article>;
+  const classes = cn("cell p-6 md:p-8", className);
+
+  if (href) {
+    return (
+      <Link href={href} className={cn(classes, "block")}>
+        {children}
+      </Link>
+    );
+  }
+
+  return <article className={classes}>{children}</article>;
 }
 
 export function Status({ children, tone = "muted" }: { children: ReactNode; tone?: "done" | "live" | "muted" }) {

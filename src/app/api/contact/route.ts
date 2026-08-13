@@ -2,20 +2,28 @@ import { NextResponse } from "next/server";
 import { sealEvent } from "@/lib/audit";
 import { saveLead } from "@/lib/db";
 import { clientIp, limited } from "@/lib/rate-limit";
-import { contactSchema } from "@/lib/schemas";
+import { contactSchema, isHoneypot, parseJsonObject } from "@/lib/schemas";
 
 export async function POST(request: Request) {
   if (limited(clientIp(request))) {
-    return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+    return NextResponse.json(
+      { error: "Demasiadas solicitudes. Espera unos minutos." },
+      { status: 429 },
+    );
   }
 
-  let body: Record<string, unknown>;
+  let raw: unknown;
   try {
-    body = (await request.json()) as Record<string, unknown>;
+    raw = await request.json();
   } catch {
-    return NextResponse.json({ error: "invalid_json" }, { status: 400 });
+    return NextResponse.json({ error: "El cuerpo no es JSON válido." }, { status: 400 });
   }
-  if (typeof body.company_website === "string" && body.company_website.trim()) {
+
+  const body = parseJsonObject(raw);
+  if (!body) {
+    return NextResponse.json({ error: "El cuerpo no es JSON válido." }, { status: 400 });
+  }
+  if (isHoneypot(body)) {
     return NextResponse.json({ id: "ok" });
   }
 

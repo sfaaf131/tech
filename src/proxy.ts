@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { portalPaths } from "@/lib/portfolio";
 
 const security = {
   "X-Content-Type-Options": "nosniff",
@@ -22,11 +23,9 @@ function hasSession(request: NextRequest) {
     .some((cookie) => cookie.name.includes("authjs.session-token"));
 }
 
-const privatePaths = ["/dashboard", "/proyectos"];
-
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const gated = privatePaths.some(
+  const gated = portalPaths.some(
     (path) => pathname === path || pathname.startsWith(`${path}/`),
   );
 

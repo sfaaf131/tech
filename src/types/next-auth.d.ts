@@ -1,5 +1,4 @@
-import "next-auth";
-import "next-auth/jwt";
+import { type DefaultSession } from "next-auth";
 import type { PortalKind } from "@/lib/portfolio";
 
 declare module "next-auth" {
@@ -8,11 +7,8 @@ declare module "next-auth" {
   }
 
   interface Session {
-    user: {
-      name?: string | null;
-      email?: string | null;
-      image?: string | null;
-      portal?: PortalKind;
+    user: DefaultSession["user"] & {
+      portal: PortalKind;
     };
   }
 }

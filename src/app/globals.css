@@ -86,11 +86,17 @@ button.cell:hover {
   padding: 0.72rem 0.85rem;
   color: var(--paper);
   outline: none;
+  font-size: 1rem;
 }
 
 .field:focus {
   border-color: rgba(17, 17, 17, 0.45);
   box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.08);
+}
+
+.field[aria-invalid="true"] {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.12);
 }
 
 .sr-only {
@@ -125,6 +131,21 @@ button.cell:hover {
 :focus-visible {
   outline: 2px solid var(--paper);
   outline-offset: 3px;
+}
+
+.bg-signal:focus-visible,
+.skip-link:focus-visible {
+  outline: 2px solid var(--paper);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--ink);
+}
+
+details > summary {
+  list-style: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

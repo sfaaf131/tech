@@ -5,8 +5,12 @@ const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 function client() {
   if (!process.env.DATABASE_URL) return null;
-  globalForPrisma.prisma ??= new PrismaClient();
-  return globalForPrisma.prisma;
+  try {
+    globalForPrisma.prisma ??= new PrismaClient();
+    return globalForPrisma.prisma;
+  } catch {
+    return null;
+  }
 }
 
 export async function saveLead(input: ContactInput, seal: string) {
@@ -26,9 +30,12 @@ export async function saveApplication(input: ApplyInput, seal: string) {
   try {
     await db.application.create({
       data: {
-        ...input,
-        market: input.market ?? null,
-        traction: input.traction ?? null,
+        name: input.name,
+        email: input.email,
+        company: input.company,
+        idea: input.idea,
+        market: input.market,
+        traction: input.traction,
         seal,
       },
     });
