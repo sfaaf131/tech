@@ -29,13 +29,12 @@ export const metadata: Metadata = {
   applicationName: "Kondax",
   keywords: [
     "Kondax",
-    "incubadora",
+    "factoría de software",
     "células de ingeniería",
-    "fábrica de software",
-    "RegTech",
-    "KYC",
-    "Open Banking",
     "agentes de IA",
+    "RPA",
+    "sweat equity",
+    "venture studio",
   ],
   openGraph: {
     title: `${site.name}.tech`,

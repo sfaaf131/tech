@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Kondax.tech — incubamos con IA, ejecutamos con células";
+export const alt = "Kondax.tech — factoría de software, IA y venture studio";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -23,15 +23,15 @@ export default function OpenGraphImage() {
           KONDAX.TECH
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-          <div style={{ fontSize: 72, lineHeight: 1.05, fontWeight: 600 }}>
-            Incubamos con IA.
+          <div style={{ fontSize: 56, lineHeight: 1.08, fontWeight: 600 }}>
+            Ingeniería para empresas.
           </div>
-          <div style={{ fontSize: 72, lineHeight: 1.05, color: "#5eead4", fontWeight: 600 }}>
-            Ejecutamos con células.
+          <div style={{ fontSize: 56, lineHeight: 1.08, color: "#5eead4", fontWeight: 600 }}>
+            Co-inversión para startups.
           </div>
         </div>
         <div style={{ fontSize: 24, color: "#8b97a8" }}>
-          SaaS · Fábrica · Sweat equity
+          Factoría · IA · Sweat equity
         </div>
       </div>
     ),

@@ -22,11 +22,16 @@ function hasSession(request: NextRequest) {
     .some((cookie) => cookie.name.includes("authjs.session-token"));
 }
 
+const privatePaths = ["/dashboard", "/proyectos"];
+
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const gated = privatePaths.some(
+    (path) => pathname === path || pathname.startsWith(`${path}/`),
+  );
 
-  if (pathname.startsWith("/app") && !hasSession(request)) {
-    const login = new URL("/passport", request.url);
+  if (gated && !hasSession(request)) {
+    const login = new URL("/acceso", request.url);
     login.searchParams.set("next", pathname);
     return withSecurity(NextResponse.redirect(login));
   }

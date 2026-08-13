@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  company   String
+  role      String?
+  need      String
+  message   String
+  seal      String
+  createdAt DateTime @default(now())
+}
+
+model Application {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  company   String
+  idea      String
+  market    String?
+  traction  String?
+  seal      String
+  createdAt DateTime @default(now())
+}
+
+model Project {
+  id         String   @id @default(cuid())
+  name       String
+  kind       String
+  status     String
+  summary    String?
+  createdAt  DateTime @default(now())
+  sprints    Sprint[]
+}
+
+model Sprint {
+  id          String  @id @default(cuid())
+  name        String
+  status      String
+  deliverable String
+  hours       Int?
+  projectId   String
+  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}

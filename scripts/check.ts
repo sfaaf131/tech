@@ -1,33 +1,32 @@
-import { estimateQuote } from "../src/lib/quote";
-import { estimateRoi } from "../src/lib/roi";
 import { sealEvent, verifyChain } from "../src/lib/audit";
+import { applySchema, contactSchema } from "../src/lib/schemas";
+import { projectsFor } from "../src/lib/portfolio";
 
-const quote = estimateQuote({
-  audience: "banca",
-  serviceIds: ["kyc", "risk"],
-  scope: "producto",
-  timeline: "12",
-  equity: false,
+const lead = contactSchema.safeParse({
+  name: "Ana Pérez",
+  email: "ana@empresa.cl",
+  company: "Empresa Sur",
+  need: "celulas",
+  message: "Necesitamos automatizar el back-office de cobranza.",
 });
 
-if (quote.hours < 400) {
-  throw new Error(`expected banking quote hours >= 400, got ${quote.hours}`);
+if (!lead.success) {
+  throw new Error("contact schema should accept a corporate lead");
 }
 
-const roi = estimateRoi({
-  fte: 10,
-  salaryClp: 20_000_000,
-  automationPct: 0.4,
-  monthlyVolume: 8000,
-  errorRate: 0.02,
-  costPerErrorClp: 15000,
-  complianceClp: 30_000_000,
-  implementationUsd: 60000,
-  annualSaasClp: 2_000_000,
+const application = applySchema.safeParse({
+  name: "Luis Soto",
+  email: "luis@startup.cl",
+  company: "RutaSur",
+  idea: "Marketplace de fletes para pymes del sur de Chile con tracking en tiempo real.",
 });
 
-if (!Number.isFinite(roi.paybackMonths) || roi.currentAnnualClp <= 0) {
-  throw new Error("roi calculation failed");
+if (!application.success) {
+  throw new Error("apply schema should accept a founder submission");
+}
+
+if (projectsFor("b2b").length < 1 || projectsFor("startup").length < 1) {
+  throw new Error("each portal kind should have a demo project");
 }
 
 const first = sealEvent("test", { ok: true });
@@ -36,7 +35,4 @@ if (!verifyChain([first, second])) {
   throw new Error("audit chain should verify");
 }
 
-console.log("kondax math ok", {
-  hours: quote.hours,
-  payback: Number(roi.paybackMonths.toFixed(2)),
-});
+console.log("kondax checks ok", { lead: lead.data.need, apply: application.data.company });

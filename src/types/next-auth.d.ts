@@ -1,11 +1,10 @@
 import "next-auth";
 import "next-auth/jwt";
-import type { RoleId } from "@/lib/catalog";
+import type { PortalKind } from "@/lib/portfolio";
 
 declare module "next-auth" {
   interface User {
-    role?: RoleId;
-    providers?: string[];
+    portal?: PortalKind;
   }
 
   interface Session {
@@ -13,16 +12,13 @@ declare module "next-auth" {
       name?: string | null;
       email?: string | null;
       image?: string | null;
-      role?: RoleId;
-      providers?: string[];
-      validation?: "technical" | "commercial" | "both" | "pending";
+      portal?: PortalKind;
     };
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    role?: RoleId;
-    providers?: string[];
+    portal?: PortalKind;
   }
 }

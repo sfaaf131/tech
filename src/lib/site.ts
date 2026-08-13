@@ -3,41 +3,13 @@ export const site = {
   domain: "kondax.tech",
   url: "https://kondax.tech",
   email: "team@kondax.tech",
-  tagline: "Incubamos con IA. Ejecutamos con células de ingeniería.",
+  tagline:
+    "Ingeniería de software e inteligencia artificial para empresas. Co-inversión técnica para startups.",
   description:
-    "Kondax.tech une incubación y automatización con IA con ejecución técnica mediante células ágiles. SaaS para emprendedores, fábrica de software para empresas y banca, y co-creación con sweat equity.",
+    "Kondax.tech es una factoría de software, inteligencia artificial y venture studio. Células de ingeniería para corporativos y pymes; socio tecnológico a cambio de sweat equity para fundadores.",
 } as const;
 
 export const nav = [
-  { href: "/incubadora", label: "Incubadora" },
-  { href: "/fabrica", label: "Fábrica" },
   { href: "/enterprise", label: "Enterprise" },
-  { href: "/servicios", label: "Servicios" },
+  { href: "/startups", label: "Venture" },
 ] as const;
-
-export const toolNav = [
-  { href: "/cotizador", label: "Cotizar" },
-  { href: "/roi", label: "ROI" },
-] as const;
-
-export const footerNav = {
-  Plataforma: [
-    { href: "/incubadora", label: "Incubadora y marketplace" },
-    { href: "/fabrica", label: "Fábrica de software" },
-    { href: "/enterprise", label: "Pymes, corporaciones y banca" },
-    { href: "/modelo", label: "Modelo y monetización" },
-  ],
-  Producto: [
-    { href: "/servicios", label: "Matriz de servicios" },
-    { href: "/cotizador", label: "Cotizador inteligente" },
-    { href: "/roi", label: "Calculadora de ROI" },
-    { href: "/passport", label: "Kondax Passport" },
-  ],
-  Confianza: [
-    { href: "/seguridad", label: "Seguridad y cumplimiento" },
-    { href: "/contacto", label: "Contacto" },
-    { href: "/app", label: "Aplicación privada" },
-  ],
-} as const;
-
-export const usdToClp = 950;

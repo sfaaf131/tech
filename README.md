@@ -1,58 +1,38 @@
 # Kondax.tech
 
-Incubamos con IA. Ejecutamos con células de ingeniería.
+Factoría de software, inteligencia artificial y venture studio.
 
-Kondax une **incubación y automatización con IA** (inspirado en CEmprendedor) con **ejecución técnica mediante células ágiles** (inspirado en Trio.dev). La marca, el producto y este repositorio viven bajo [kondax.tech](https://kondax.tech).
+- **Enterprise (B2B y pymes):** células de ingeniería, agentes de IA y RPA. Cobro por hora, sprint o proyecto.
+- **Venture (fundadores):** socio tecnológico a cambio de sweat equity.
 
-## Visión comercial
+Sitio: [kondax.tech](https://kondax.tech)
 
-Tres vías de ingreso, una sola plataforma:
+## Mapa
 
-1. **Suscripción SaaS** — incubadora, agentes y marketplace para emprendedores.
-2. **Fábrica por hora** — células de ingeniería para pymes, corporaciones y banca.
-3. **Sweat equity** — participación en proyectos co-creados.
-
-## Líneas de operación
-
-| Audiencia | Entrada |
+| Ruta | Qué es |
 | --- | --- |
-| Emprendedores independientes | Incubadora + marketplace de socios |
-| Pymes, corporaciones y banca | Consultoría y células de alto nivel |
+| `/` | Inicio: dos líneas, servicios, modelo |
+| `/enterprise` | Factoría B2B + formulario comercial |
+| `/startups` | Sweat equity + postulación |
+| `/acceso` | Entrada al portal |
+| `/dashboard` | Resumen (cliente o socio) |
+| `/proyectos` | Sprints y entregables |
 
-La fábrica cubre web/móvil, e-commerce avanzado, RPA, agentes de IA, Web3, computación espacial, BPM, process mining, motores de riesgo, RegTech, KYC/AML y Open Banking.
+## Stack
 
-## Arquitectura de la web
-
-- **Público:** marketing, cotizador inteligente y calculadora de ROI corporativo.
-- **Privado (`/app`):** proyectos, células, marketplace, equity y auditoría.
-- **Passport:** OAuth 2.0. GitHub/GitLab para programadores. LinkedIn para fundadores, inversores y corporativos.
-
-### Stack
-
-- Next.js (App Router) + TypeScript
-- Node.js (APIs) y PostgreSQL (`db/schema.sql`)
-- Python previsto para agentes de IA
-- OpenAI / Claude
-- Auth.js (NextAuth v5)
-
-### Seguridad
-
-TLS 1.3 en tránsito, AES-256 en reposo, logs SHA-256 encadenados, headers de seguridad y diseño preparado para SOC 2 / ISO 27001.
-
-## Desarrollo
+Next.js (App Router), TypeScript, Tailwind CSS, Auth.js, PostgreSQL / Prisma (`prisma/schema.prisma`).
 
 ```bash
 cp .env.example .env.local
 npm install
+npx prisma generate
 npm run dev
 ```
 
-Sin claves OAuth, Passport abre la consola en modo demostración. Con `AUTH_GITHUB_*`, `AUTH_GITLAB_*` y `AUTH_LINKEDIN_*` se activa la validación real.
+Sin `DATABASE_URL` los formularios se sellan y responden; la persistencia queda pendiente. Con PostgreSQL: `npx prisma db push`.
 
 ```bash
-npm test    # cotizador, ROI y cadena de auditoría
+npm test
 npm run lint
 npm run build
 ```
-
-El cotizador sella cada estimación (`POST /api/cotizar`). El ROI corporativo vive en `/roi`.
