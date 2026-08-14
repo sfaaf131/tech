@@ -4,57 +4,46 @@ export type ExperimentStatus = (typeof experimentStatuses)[number];
 
 export type Experiment = {
   slug: string;
-  number: string;
   title: string;
   status: ExperimentStatus;
   opened: string;
+  question: string;
   summary: string;
   body: string[];
-  ask: string;
+  open: string;
+  openToJoin: boolean;
 };
 
 export const experiments: Experiment[] = [
   {
     slug: "este-sitio",
-    number: "001",
     title: "Este sitio",
     status: "abierto",
     opened: "2026-08-14",
-    summary: "El lab mismo. Una bitácora pública de lo que se está construyendo.",
+    question:
+      "¿Un taller a la vista sirve más que una página en blanco o una landing de factory?",
+    summary: "kondax.tech deja de estar vacío. Pasa a ser la firma de lo que construyo, con puerta.",
     body: [
-      "kondax.tech estuvo en blanco a propósito. Antes era un brochure. Eso se borró.",
-      "Este experimento es el reemplazo: un taller a la vista. Pocas rutas, copy honesta, una puerta para entrar.",
-      "No hay catálogo de servicios. No hay pitch. Si el sitio se siente como agencia, falló.",
+      "El sitio anterior era una factory. Se eliminó. El dominio quedó en blanco a propósito: rellenar con un catálogo o un chat no aprovecha el nombre.",
+      "Este experimento es el propio kondax.tech: un taller personal, cooperativo, sin catálogo. Si en un mes nadie usa la puerta, se vuelve a evaluar. No se rellena con trabajo inventado.",
     ],
-    ask: "Si algo del lab te sirve, usa Cooperar y di qué parte y por qué.",
+    open: "Leer, marcar un error, o proponer una pieza concreta: copy, diseño, o un experimento nuevo con objeto.",
+    openToJoin: true,
   },
   {
-    slug: "puerta-abierta",
-    number: "002",
-    title: "Puerta abierta",
+    slug: "la-puerta",
+    title: "La puerta",
     status: "abierto",
     opened: "2026-08-14",
-    summary: "Un formulario preciso. Sin reunión por defecto.",
+    question:
+      "¿Alguien puede entrar con un objeto preciso, sin que esto se vuelva un embudo de ventas?",
+    summary: "El formulario de cooperar. Tres intentos, ninguno es “agendemos”.",
     body: [
-      "Cooperar aquí no es pedir una demo. Es dejar una nota que se pueda responder.",
-      "Tres intenciones: entrar a un experimento, dejar una observación, o proponer trabajo conjunto.",
-      "Si el mensaje es vago, no hay respuesta. Si es concreto, sí.",
+      "Cooperar aquí no es postular a un equipo ni pedir una cotización. Es entrar a un experimento, dejar una nota, o proponer trabajo conjunto con un objeto.",
+      "Si la puerta se usa para networking vacío, se estrecha. Si no se usa, el taller sigue siendo mío y público, no un diario.",
     ],
-    ask: "Escribe con un hecho, un contexto y una pregunta. Nada de “hablemos”.",
-  },
-  {
-    slug: "borrar-la-factory",
-    number: "000",
-    title: "Borrar la factory",
-    status: "cerrado",
-    opened: "2026-08-14",
-    summary: "El dominio era un brochure. Se vació. Queda cerrado a propósito.",
-    body: [
-      "Había una factory, un catálogo y un discurso de socio técnico. No era un producto. Ocupaba el nombre.",
-      "Se eliminó. El holding en blanco era mejor que fingir una empresa que no existía en esa forma.",
-      "Este registro queda para no revivir eso con otro nombre.",
-    ],
-    ask: "No hay que entrar aquí. Si te interesa lo que viene, mira 001 y 002.",
+    open: "Usarla. Si falla —validación, tono, fricción— deja una nota con el caso.",
+    openToJoin: true,
   },
 ];
 
@@ -63,11 +52,20 @@ export function experimentBySlug(slug: string) {
 }
 
 export function openExperiments() {
-  return experiments.filter((item) => item.status === "abierto");
+  return experiments.filter((item) => item.status === "abierto" && item.openToJoin);
 }
 
 export function statusLabel(status: ExperimentStatus) {
-  if (status === "abierto") return "abierto";
+  if (status === "abierto") return "en curso";
   if (status === "pausa") return "en pausa";
   return "cerrado";
+}
+
+export function experimentsSorted() {
+  const rank = { abierto: 0, pausa: 1, cerrado: 2 } as const;
+  return [...experiments].sort((a, b) => {
+    const byStatus = rank[a.status] - rank[b.status];
+    if (byStatus !== 0) return byStatus;
+    return b.opened.localeCompare(a.opened);
+  });
 }

@@ -4,41 +4,40 @@ export type Note = {
   date: string;
   summary: string;
   body: string[];
+  related?: string;
 };
 
 export const notes: Note[] = [
   {
-    slug: "el-dominio-no-es-una-agencia",
-    title: "El dominio no es una agencia",
+    slug: "se-borro-la-factory",
+    title: "Se borró la factory",
     date: "2026-08-14",
-    summary: "Kursox es la agencia. Kondax es otra cosa, o no es nada.",
+    summary: "El sitio anterior se eliminó. No hay portfolio que rescatar de esa capa.",
+    related: "este-sitio",
     body: [
-      "Si este sitio se lee como la landing de una consultora, está mal. Kursox ya existe para ese trabajo.",
-      "kondax.tech es corto y suena a producto. Mientras no haya un producto con un verbo, el dominio es este lab: firma de lo que construyo y puerta para quien quiera entrar.",
-      "No voy a rellenar con un catálogo para que el dominio “se vea ocupado”.",
+      "El sitio anterior vendía un catálogo que no era un producto, y gastaba el dominio.",
+      "Se eliminó. Kondax no es un estudio de venture. Es un nombre de producto usado, por ahora, como taller.",
     ],
   },
   {
-    slug: "como-escribirme",
-    title: "Cómo escribirme",
+    slug: "kursox-no-es-esto",
+    title: "Kursox no es esto",
     date: "2026-08-14",
-    summary: "Una nota precisa vale más que una intro larga.",
+    summary: "Kursox es una agencia aparte. Este dominio no es su landing.",
     body: [
-      "Usa /cooperar o team@kondax.tech. Di quién eres en una línea, qué viste aquí, y qué propones.",
-      "Sirve: “vi el experimento 001, puedo ayudar con X, esto es lo que ya hice”.",
-      "No sirve: “me encantaría conectar” ni un pitch de servicios.",
-      "Estoy en Santiago. Si hay que verse, se coordina después. Primero el texto.",
+      "Kursox existe. Es una agencia, y es otra puerta.",
+      "kondax.tech no es su landing, no lista sus servicios, no pide cotización. Si llegaste por Kursox, esto igual no es un brochure con otro nombre.",
     ],
   },
   {
-    slug: "que-quedo-afuera",
-    title: "Qué quedó afuera",
+    slug: "en-blanco-a-proposito",
+    title: "En blanco a propósito",
     date: "2026-08-14",
-    summary: "Una lista corta para no volver a inflar el sitio.",
+    summary: "El dominio estuvo en blanco para no rellenar. Esta es la primera publicación después.",
+    related: "este-sitio",
     body: [
-      "No hay chat con un modelo. No hay presupuesto automático. No hay listado de verticales.",
-      "No hay clientes inventados, ni métricas, ni equipo de diez personas.",
-      "Si más adelante hay un producto, el lab lo anota. Hasta entonces, esto es el producto: el taller a la vista.",
+      "Antes de este taller el dominio mostraba solo “kondax.tech”. No era un WIP de marketing. Era la decisión de no rellenar.",
+      "Este lab es la primera cosa publicada después de eso. Sigue aplicando la misma regla: si no hay objeto, no hay ítem.",
     ],
   },
 ];

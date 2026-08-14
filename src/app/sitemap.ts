@@ -7,7 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date("2026-08-14");
   const staticPaths = [
     { path: "", priority: 1 },
-    { path: "/lab", priority: 0.9 },
+    { path: "/experimentos", priority: 0.9 },
     { path: "/notas", priority: 0.8 },
     { path: "/cooperar", priority: 0.8 },
   ];
@@ -20,14 +20,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: item.priority,
     })),
     ...experiments.map((item) => ({
-      url: `${site.url}/lab/${item.slug}`,
+      url: `${site.url}/experimentos/${item.slug}`,
       lastModified,
       changeFrequency: "monthly" as const,
       priority: 0.6,
     })),
     ...notes.map((item) => ({
       url: `${site.url}/notas/${item.slug}`,
-      lastModified,
+      lastModified: new Date(item.date),
       changeFrequency: "monthly" as const,
       priority: 0.5,
     })),

@@ -1,15 +1,23 @@
 import Link from "next/link";
 import { statusLabel, type Experiment } from "@/lib/lab";
+import { formatDate } from "@/lib/site";
 
 export function ExperimentRow({ item }: { item: Experiment }) {
   return (
-    <Link className="row" href={`/lab/${item.slug}`}>
-      <span className="num">{item.number}</span>
+    <article className="row">
       <div>
-        <p className="row-title">{item.title}</p>
+        <h3 className="row-title">
+          <Link href={`/experimentos/${item.slug}`}>{item.title}</Link>
+        </h3>
         <p className="row-summary">{item.summary}</p>
       </div>
-      <span className={`meta status-${item.status}`}>{statusLabel(item.status)}</span>
-    </Link>
+      <p className="meta">
+        <span className="status-mark" data-state={item.status} aria-hidden="true" />
+        <span className="sr-only">Estado: </span>
+        {statusLabel(item.status)}
+        <span aria-hidden="true"> · </span>
+        <time dateTime={item.opened}>{formatDate(item.opened)}</time>
+      </p>
+    </article>
   );
 }

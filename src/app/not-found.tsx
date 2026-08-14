@@ -8,17 +8,17 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <main id="contenido" className="page">
+    <main id="contenido" className="page" tabIndex={-1}>
       <div className="shell prose">
         <p className="kicker">404</p>
-        <h1 className="display">Eso no está en el lab.</h1>
-        <p className="lede muted">La ruta no existe. El índice sí.</p>
+        <h1 className="display">No está.</h1>
+        <p className="lede muted">Esa ruta no existe.</p>
         <div className="actions">
           <Link className="button" href="/">
-            Inicio
+            Volver
           </Link>
-          <Link className="button ghost" href="/lab">
-            Lab
+          <Link className="button ghost" href="/experimentos">
+            Experimentos
           </Link>
         </div>
       </div>

@@ -2,10 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { nav } from "@/lib/site";
+import { nav, site } from "@/lib/site";
 
 function current(pathname: string, href: string) {
-  if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -15,8 +14,8 @@ export function Header() {
   return (
     <header className="header">
       <div className="shell header-row">
-        <Link className="brand" href="/">
-          kondax <span>/ lab</span>
+        <Link className="brand" href="/" aria-label={`${site.host} inicio`}>
+          kondax<span>.tech</span>
         </Link>
         <nav className="nav" aria-label="Principal">
           {nav.map((item) => (

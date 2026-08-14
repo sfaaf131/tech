@@ -8,7 +8,6 @@ export function Shell({ children }: { children: React.ReactNode }) {
         Saltar al contenido
       </a>
       <Header />
-      <hr className="hairline" />
       {children}
       <Footer />
     </>

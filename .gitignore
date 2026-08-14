@@ -44,3 +44,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local leftovers / accidental db
+*.db
+*.db-journal
+/data
+

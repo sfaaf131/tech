@@ -1,19 +1,17 @@
 # kondax.tech
 
-Lab personal cooperativo de Agustín Saez C. (Santiago).
+Taller público de Agustín Saez C. en Santiago. Experimentos, notas y una puerta para cooperar.
 
-El dominio es la bitácora: experimentos, notas y una puerta para cooperar. No es la landing de Kursox. No es una factory.
+No es la landing de Kursox. No es una factory.
 
-## Qué hay
+## Rutas
 
-- `/` — portada
-- `/lab` — índice de experimentos
-- `/notas` — observaciones cerradas
-- `/cooperar` — nota precisa (honeypot + validación en español)
+- `/` — la puerta
+- `/experimentos` — lo que está en el banco
+- `/notas` — recortes fechados
+- `/cooperar` — entrar, dejar nota, o proponer trabajo conjunto
 
-## Qué no vuelve
-
-Factory, celdas, sweat equity, cotizador, ROI, Passport, chat con un modelo, nombres de competidores, clientes o métricas inventadas.
+El formulario valida en español, tiene honeypot y rate limit. Sin `DATABASE_URL` responde `{ stored: "pending" }`. No hay portal ni auth.
 
 ## Local
 

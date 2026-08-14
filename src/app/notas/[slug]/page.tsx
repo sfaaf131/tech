@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { experimentBySlug } from "@/lib/lab";
 import { noteBySlug, notes } from "@/lib/notes";
+import { formatDate } from "@/lib/site";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -26,21 +28,29 @@ export default async function NotePage({ params }: Props) {
   const { slug } = await params;
   const item = noteBySlug(slug);
   if (!item) notFound();
+  const related = item.related ? experimentBySlug(item.related) : undefined;
 
   return (
-    <main id="contenido" className="page">
+    <main id="contenido" className="page" tabIndex={-1}>
       <div className="shell prose">
         <p className="kicker">
-          nota · <time dateTime={item.date}>{item.date}</time>
+          nota · <time dateTime={item.date}>{formatDate(item.date)}</time>
         </p>
         <h1 className="display">{item.title}</h1>
-        <p className="lede">{item.summary}</p>
         <div className="section">
           {item.body.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
         </div>
+        {related ? (
+          <p className="muted">
+            Ligado a: <Link href={`/experimentos/${related.slug}`}>{related.title}</Link>
+          </p>
+        ) : null}
         <div className="actions">
+          <Link className="button" href="/cooperar?intento=nota">
+            Dejar una nota
+          </Link>
           <Link className="button ghost" href="/notas">
             Todas las notas
           </Link>

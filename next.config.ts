@@ -4,10 +4,14 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   async redirects() {
     return [
+      { source: "/lab", destination: "/experimentos", permanent: true },
+      { source: "/lab/:slug", destination: "/experimentos/:slug", permanent: true },
+      { source: "/abrir", destination: "/cooperar", permanent: true },
+      { source: "/proyectos", destination: "/experimentos", permanent: true },
+      { source: "/contacto", destination: "/cooperar", permanent: true },
       { source: "/incubadora", destination: "/", permanent: true },
       { source: "/fabrica", destination: "/", permanent: true },
       { source: "/modelo", destination: "/", permanent: true },
-      { source: "/contacto", destination: "/cooperar", permanent: true },
       { source: "/servicios", destination: "/", permanent: true },
       { source: "/passport", destination: "/", permanent: true },
       { source: "/app", destination: "/", permanent: true },
@@ -19,7 +23,6 @@ const nextConfig: NextConfig = {
       { source: "/startups", destination: "/", permanent: true },
       { source: "/acceso", destination: "/", permanent: true },
       { source: "/dashboard", destination: "/", permanent: true },
-      { source: "/proyectos", destination: "/lab", permanent: true },
     ];
   },
   async headers() {

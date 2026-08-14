@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono, Space_Grotesk } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import { Shell } from "@/components/layout/shell";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -10,27 +10,22 @@ const sans = Space_Grotesk({
   weight: ["400", "500", "600"],
 });
 
-const mono = Geist_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.host} — ${site.tagline}`,
-    template: `%s · ${site.host}`,
+    default: "Kondax — taller de Agustín Saez C.",
+    template: "%s · Kondax",
   },
   description: site.description,
   applicationName: site.name,
   authors: [{ name: site.author }],
   creator: site.author,
-  keywords: ["Kondax", "lab personal", "Agustín Saez", "Santiago", "experimentos"],
+  keywords: ["Kondax", "taller", "lab personal", "Agustín Saez", "Santiago", "experimentos"],
   alternates: {
-    canonical: site.url,
+    canonical: "/",
   },
   openGraph: {
-    title: `${site.host} — ${site.tagline}`,
+    title: "Kondax — taller de Agustín Saez C.",
     description: site.description,
     url: site.url,
     siteName: site.host,
@@ -39,11 +34,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.host} — ${site.tagline}`,
+    title: "Kondax — taller de Agustín Saez C.",
     description: site.description,
   },
   robots: {
-    index: true,
+    index: site.robotsIndex,
     follow: true,
   },
 };
@@ -55,10 +50,27 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: site.author,
+  url: site.url,
+  email: site.email,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Santiago",
+    addressCountry: "CL",
+  },
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="es" className={`${sans.variable} ${mono.variable}`}>
+    <html lang="es-CL" className={sans.variable}>
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
         <Shell>{children}</Shell>
       </body>
     </html>
