@@ -1,38 +1,28 @@
-# Kondax.tech
+# kondax.tech
 
-Factoría de software, inteligencia artificial y venture studio.
+El sitio anterior (factoría / venture studio) se eliminó. El dominio queda en blanco.
 
-- **Empresas (B2B y pymes):** process mining, RPA, agentes de IA, analítica, integración y células de ingeniería. Cobro por hora, sprint o proyecto.
-- **Fundadores:** socio tecnológico a cambio de sweat equity.
+## Qué encaja en este dominio
 
-Sitio: [kondax.tech](https://kondax.tech)
+`kondax.tech` es un nombre de **producto**, no de agencia. Corto, pronunciable (kon-dax), TLD que le dice a un comprador o a un VC que esto es software. Usarlo otra vez como brochure de células, RPA y sweat equity desperdicia el activo.
 
-## Mapa
+No hay una marca global ocupando Kondax. Hay un Kft. húngaro menor y un `knodax.com` de cursos AWS: no bloquean el nombre en Chile ni en un SaaS.
 
-| Ruta | Qué es |
-| --- | --- |
-| `/` | Inicio: dos líneas, servicios, modelo |
-| `/enterprise` | Empresas: catálogo + pedir alcance |
-| `/startups` | Fundadores: criterios + postulación |
-| `/acceso` | Entrada al portal |
-| `/dashboard` | Resumen (cliente o socio) |
-| `/proyectos` | Sprints y entregables |
+### Ideas que sí aprovechan el dominio
 
-## Stack
+1. **Un producto con un verbo.** El dominio es la app. Un CLI, un dashboard, un agente, un índice. Quien entra escribe `kondax.tech` y entra al producto, no a un pitch.
+2. **Índice / control de operación.** DAX evoca índice. Kondax puede ser el tablero que mide un flujo (cola, SLA, costo por caso) y dispara la siguiente automatización. Una sola pantalla, no un catálogo de siete servicios.
+3. **Runtime de agentes para pymes.** No “hacemos agentes”. Un producto: conectas el proceso, el agente corre, queda bitácora. Precio por uso, no por célula.
+4. **Lab personal.** Si no hay producto todavía: `kondax.tech` como firma de lo que Agustín construye (notas, tools, experimentos). Mejor que un holding eterno y mejor que revivir la factory.
+5. **Sistema interno de Kursox, producto después.** Si la operación real (sprints, horas, sellos) se usa en clientes, el dominio puede ser ese sistema. Primero se usa. Después se vende.
 
-Next.js (App Router), TypeScript, Tailwind CSS, Auth.js, PostgreSQL / Prisma (`prisma/schema.prisma`).
+### Ideas que no valen el dominio
 
-```bash
-cp .env.example .env.local
-npm install
-npx prisma generate
-npm run dev
-```
+- Otra landing de software factory / venture studio.
+- Chat con un modelo encima del sitio.
+- Cotizador, ROI, incubadora, Passport.
+- Copiar el nombre de un competidor o listar verticales (banca, web3) como si fueran el producto.
 
-Sin `DATABASE_URL` los formularios se sellan y responden; la persistencia queda pendiente. Con PostgreSQL: `npx prisma db push`.
+### Cómo decidir
 
-```bash
-npm test
-npm run lint
-npm run build
-```
+Si en 30 días no hay un usuario usando algo en este dominio, dejarlo en blanco. No rellenar.
