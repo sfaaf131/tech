@@ -27,10 +27,16 @@ body {
 }
 
 body {
+  display: flex;
+  flex-direction: column;
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   font-size: 1.0625rem;
   line-height: 1.55;
   font-feature-settings: "ss01" on;
+}
+
+main {
+  flex: 1;
 }
 
 ::selection {
