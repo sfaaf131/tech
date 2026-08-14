@@ -1,11 +1,11 @@
 {
   "name": "kondax.tech",
-  "install": "python3 -c \"from pathlib import Path; assert Path('index.html').is_file(), 'missing index.html'\"",
+  "install": "npm install",
   "terminals": [
     {
-      "name": "site",
-      "command": "python3 -m http.server 3000 --bind 0.0.0.0",
-      "description": "Serves the static holding page on port 3000"
+      "name": "dev",
+      "command": "npm run dev -- --hostname 0.0.0.0 --port 3000",
+      "description": "Serves the cooperative personal lab on port 3000"
     }
   ],
   "ports": [
