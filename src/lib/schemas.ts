@@ -38,6 +38,15 @@ export function isEmptyGreeting(message: string) {
   return greetings.some((item) => normalized === item || normalized.startsWith(`${item} `));
 }
 
+function isHttpUrl(value: string) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export const cooperateSchema = z
   .object({
     name: z.string({ error: "Pon un nombre real, corto." }).trim().min(2, "Pon un nombre real, corto.").max(80),
@@ -52,16 +61,17 @@ export const cooperateSchema = z
       })
       .pipe(z.enum(experimentSlugs).optional()),
     message: z
-      .string({ error: "Falta objeto. Escribe qué harías o qué corrección traes." })
+      .string({ error: "Muy corto. Di qué harías, qué viste, o qué corrección traes." })
       .trim()
-      .min(40, "Falta objeto. Escribe qué harías o qué corrección traes.")
+      .min(40, "Muy corto. Di qué harías, qué viste, o qué corrección traes.")
       .max(1200, "La nota es muy larga. Córtala."),
     link: z
       .string()
       .trim()
       .max(240)
       .optional()
-      .transform((value) => (value ? value : undefined)),
+      .transform((value) => (value ? value : undefined))
+      .refine((value) => !value || isHttpUrl(value), { error: "Eso no parece un enlace." }),
   })
   .superRefine((value, ctx) => {
     if (value.intent === "entrar" && !value.experiment) {
@@ -75,7 +85,7 @@ export const cooperateSchema = z
       ctx.addIssue({
         code: "custom",
         path: ["message"],
-        message: "Eso es un saludo. Falta el objeto.",
+        message: "Eso es un saludo. Di qué harías o qué corrección traes.",
       });
     }
   });
@@ -95,15 +105,32 @@ export function isHoneypot(body: Record<string, unknown>): boolean {
 }
 
 export function isTooFast(body: Record<string, unknown>, now = Date.now()) {
+  if (!Object.hasOwn(body, "t")) return true;
   const raw = body.t;
-  if (typeof raw !== "string" && typeof raw !== "number") return false;
+  if (raw === "") return false;
+  if (typeof raw !== "string" && typeof raw !== "number") return true;
   const started = Number(raw);
-  if (!Number.isFinite(started)) return false;
+  if (!Number.isFinite(started)) return true;
+  if (started > now) return false;
   return now - started < 3000;
 }
 
 export const intentLabels: Record<CooperateIntent, string> = {
   entrar: "Entrar a un experimento",
-  nota: "Dejar una nota precisa",
+  nota: "Dejar una nota",
   proponer: "Proponer trabajo conjunto",
+};
+
+export const experimentHints: Record<CooperateIntent | "", string> = {
+  "": "Obligatorio solo si vas a entrar.",
+  entrar: "Elige uno de los que están abiertos.",
+  nota: "Si la nota es sobre un experimento, márcalo. Si no, déjalo vacío.",
+  proponer: "Si se apoya en uno publicado, márcalo. Si es nuevo, déjalo vacío.",
+};
+
+export const messageHints: Record<CooperateIntent | "", string> = {
+  "": "Qué experimento, qué harías, o qué corrección traes. Mínimo un párrafo corto (~40 caracteres).",
+  entrar: "A cuál, qué harías, y hasta dónde. Un párrafo. Mínimo ~40 caracteres.",
+  nota: "Qué está mal o qué falta. Página y caso, si puedes. Mínimo ~40 caracteres.",
+  proponer: "Qué haríamos, con qué material, y qué no es. Mínimo ~40 caracteres.",
 };

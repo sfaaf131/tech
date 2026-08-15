@@ -5,7 +5,7 @@ export const site = {
   robotsIndex: true,
   tagline: "Taller público. Puerta abierta.",
   description:
-    "Taller público de Agustín Saez C. en Santiago. Experimentos, notas, y una puerta abierta para cooperar.",
+    "Taller público de Agustín Saez C. en Santiago. Experimentos, notas, y una forma de cooperar.",
   email: "team@kondax.tech",
   author: "Agustín Saez C.",
   city: "Santiago, Chile",

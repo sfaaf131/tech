@@ -20,14 +20,13 @@ export const experiments: Experiment[] = [
     title: "Este sitio",
     status: "abierto",
     opened: "2026-08-14",
-    question:
-      "¿Un taller a la vista sirve más que una página en blanco o una landing de factory?",
-    summary: "kondax.tech deja de estar vacío. Pasa a ser la firma de lo que construyo, con puerta.",
+    question: "¿Un taller a la vista sirve más que un dominio en blanco?",
+    summary: "El propio kondax.tech, publicado. Sin catálogo y sin relleno.",
     body: [
       "El sitio anterior era una factory. Se eliminó. El dominio quedó en blanco a propósito: rellenar con un catálogo o un chat no aprovecha el nombre.",
       "Este experimento es el propio kondax.tech: un taller personal, cooperativo, sin catálogo. Si en un mes nadie usa la puerta, se vuelve a evaluar. No se rellena con trabajo inventado.",
     ],
-    open: "Leer, marcar un error, o proponer una pieza concreta: copy, diseño, o un experimento nuevo con objeto.",
+    open: "Leer, marcar un error, o traer una pieza concreta: copy, diseño, o un experimento nuevo con un caso.",
     openToJoin: true,
   },
   {
@@ -35,11 +34,10 @@ export const experiments: Experiment[] = [
     title: "La puerta",
     status: "abierto",
     opened: "2026-08-14",
-    question:
-      "¿Alguien puede entrar con un objeto preciso, sin que esto se vuelva un embudo de ventas?",
-    summary: "El formulario de cooperar. Tres intentos, ninguno es “agendemos”.",
+    question: "¿Alguien puede entrar con un caso preciso, sin que esto se vuelva un embudo?",
+    summary: "El formulario de cooperar. Tres caminos; ninguno es “agendemos”.",
     body: [
-      "Cooperar aquí no es postular a un equipo ni pedir una cotización. Es entrar a un experimento, dejar una nota, o proponer trabajo conjunto con un objeto.",
+      "Cooperar aquí no es postular a un equipo ni pedir una cotización. Es entrar a un experimento, dejar una nota, o proponer trabajo conjunto con un caso.",
       "Si la puerta se usa para networking vacío, se estrecha. Si no se usa, el taller sigue siendo mío y público, no un diario.",
     ],
     open: "Usarla. Si falla —validación, tono, fricción— deja una nota con el caso.",

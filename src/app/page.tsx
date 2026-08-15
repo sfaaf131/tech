@@ -6,71 +6,76 @@ import { notes } from "@/lib/notes";
 import { site } from "@/lib/site";
 
 export default function HomePage() {
+  const published = experimentsSorted();
+
   return (
     <main id="contenido" className="page" tabIndex={-1}>
       <div className="shell">
         <p className="kicker">{site.host}</p>
         <h1 className="display">Taller público. Puerta abierta.</h1>
         <p className="lede">
-          Soy {site.author}. Esto es lo que estoy construyendo, a la vista. No es una agencia. No es
-          un diario cerrado. Si algo te sirve, entra.
+          Soy {site.author} — construyo a la vista, desde Santiago. Si te sirve, léelo. Si quieres
+          sumarte, cooperar.
         </p>
         <div className="actions">
-          <Link className="button" href="/cooperar">
-            Cooperar
-          </Link>
           <Link className="button ghost" href="/experimentos">
             Ver experimentos
           </Link>
+          <Link className="button" href="/cooperar">
+            Cooperar
+          </Link>
         </div>
 
-        <section className="section" aria-labelledby="banco-heading">
+        <section className="section" aria-labelledby="experimentos-heading">
           <div className="section-head">
             <div>
-              <h2 id="banco-heading">En el banco</h2>
-              <p>Poco, y real.</p>
+              <h2 id="experimentos-heading">Experimentos</h2>
+              <p>Los que están publicados.</p>
             </div>
-            <Link href="/experimentos">Índice</Link>
+            <Link href="/experimentos">Todos</Link>
           </div>
-          <div>
-            {experimentsSorted().map((item) => (
-              <ExperimentRow key={item.slug} item={item} />
-            ))}
-          </div>
+          {published.length === 0 ? (
+            <p className="muted">No hay experimentos publicados.</p>
+          ) : (
+            published.map((item) => <ExperimentRow key={item.slug} item={item} heading="h3" />)
+          )}
         </section>
 
         <section className="section" aria-labelledby="notas-heading">
           <div className="section-head">
             <div>
               <h2 id="notas-heading">Notas</h2>
-              <p>Una observación por vez.</p>
+              <p>Recortes fechados. Sin hilo.</p>
             </div>
             <Link href="/notas">Todas</Link>
           </div>
-          <div>
-            {notes.map((item) => (
-              <NoteRow key={item.slug} item={item} />
-            ))}
-          </div>
+          {notes.length === 0 ? (
+            <p className="muted">No hay notas publicadas.</p>
+          ) : (
+            notes.map((item) => <NoteRow key={item.slug} item={item} heading="h3" />)
+          )}
         </section>
 
-        <section className="section" aria-labelledby="puerta-heading">
-          <h2 id="puerta-heading" className="display" style={{ fontSize: "var(--t-h2)" }}>
-            Si quieres entrar
+        <section className="section" aria-labelledby="entrar-heading">
+          <h2 id="entrar-heading" className="section-title">
+            Cómo entrar
           </h2>
-          <p className="lede" style={{ fontSize: "var(--t-body)" }}>
-            Tres formas, ninguna es un pitch:
-          </p>
+          <p className="lede">Tres caminos. Ninguno pide reunión.</p>
           <ol className="list">
-            <li>Entrar a un experimento que ya está abierto.</li>
-            <li>Dejar una nota precisa — un hecho, un error, un recorte.</li>
-            <li>Proponer trabajo conjunto, con un objeto concreto.</li>
+            <li>
+              <Link href="/cooperar?intento=entrar">Entrar a un experimento que ya está abierto.</Link>
+            </li>
+            <li>
+              <Link href="/cooperar?intento=nota">
+                Dejar una nota precisa — un hecho, un error, un recorte.
+              </Link>
+            </li>
+            <li>
+              <Link href="/cooperar?intento=proponer">
+                Proponer trabajo conjunto, con un caso concreto.
+              </Link>
+            </li>
           </ol>
-          <div className="actions">
-            <Link className="button" href="/cooperar">
-              Cooperar
-            </Link>
-          </div>
         </section>
 
         <p className="who">

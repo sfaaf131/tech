@@ -1,7 +1,6 @@
 const hits = new Map<string, { count: number; reset: number }>();
 
-export function limited(ip: string, max = 5, windowMs = 60 * 60 * 1000) {
-  const now = Date.now();
+export function limited(ip: string, max = 5, windowMs = 60 * 60 * 1000, now = Date.now()) {
   const current = hits.get(ip);
   if (!current || current.reset < now) {
     hits.set(ip, { count: 1, reset: now + windowMs });
@@ -11,27 +10,16 @@ export function limited(ip: string, max = 5, windowMs = 60 * 60 * 1000) {
   return current.count > max;
 }
 
+export function retryAfterSec(ip: string, now = Date.now()) {
+  const current = hits.get(ip);
+  if (!current || current.reset < now) return 3600;
+  return Math.max(1, Math.ceil((current.reset - now) / 1000));
+}
+
 export function clientIp(request: Request) {
   return (
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     request.headers.get("x-real-ip")?.trim() ||
     "local"
   );
-}
-
-export function allowRequest(
-  table: Map<string, number[]>,
-  key: string,
-  now: number,
-  limit = 5,
-  windowMs = 10 * 60 * 1000,
-) {
-  const recent = (table.get(key) ?? []).filter((stamp) => now - stamp < windowMs);
-  if (recent.length >= limit) {
-    table.set(key, recent);
-    return false;
-  }
-  recent.push(now);
-  table.set(key, recent);
-  return true;
 }

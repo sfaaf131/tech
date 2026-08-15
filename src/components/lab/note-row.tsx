@@ -2,13 +2,19 @@ import Link from "next/link";
 import type { Note } from "@/lib/notes";
 import { formatDate } from "@/lib/site";
 
-export function NoteRow({ item }: { item: Note }) {
+export function NoteRow({
+  item,
+  heading: Title = "h2",
+}: {
+  item: Note;
+  heading?: "h2" | "h3";
+}) {
   return (
-    <article className="row">
+    <article className="row row-note">
       <div>
-        <h3 className="row-title">
+        <Title className="row-title">
           <Link href={`/notas/${item.slug}`}>{item.title}</Link>
-        </h3>
+        </Title>
         <p className="row-summary">{item.summary}</p>
       </div>
       <time className="meta" dateTime={item.date}>

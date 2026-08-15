@@ -21,7 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     ...experiments.map((item) => ({
       url: `${site.url}/experimentos/${item.slug}`,
-      lastModified,
+      lastModified: new Date(item.opened),
       changeFrequency: "monthly" as const,
       priority: 0.6,
     })),

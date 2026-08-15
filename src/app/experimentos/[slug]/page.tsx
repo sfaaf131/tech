@@ -16,12 +16,27 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const item = experimentBySlug(slug);
-  if (!item) return { title: "Experimento" };
+  if (!item) return { title: "Experimento", robots: { index: false, follow: false } };
   return {
     title: `${item.title} — Experimentos`,
     description: item.question,
     alternates: { canonical: `/experimentos/${item.slug}` },
+    openGraph: { url: `/experimentos/${item.slug}` },
   };
+}
+
+function statusBanner(status: "abierto" | "pausa" | "cerrado", open: string) {
+  if (status === "abierto") {
+    return (
+      <p>
+        <strong>Qué se puede hacer.</strong> {open}
+      </p>
+    );
+  }
+  if (status === "pausa") {
+    return <p>En pausa. No se entra por ahora.</p>;
+  }
+  return <p>Cerrado. Queda el registro.</p>;
 }
 
 export default async function ExperimentPage({ params }: Props) {
@@ -36,7 +51,8 @@ export default async function ExperimentPage({ params }: Props) {
       <div className="shell prose">
         <p className="kicker">
           <span className="status-mark" data-state={item.status} aria-hidden="true" />
-          {statusLabel(item.status)} · actualizado {formatDate(item.opened)}
+          {statusLabel(item.status)}
+          {item.status === "abierto" ? ` · abierto ${formatDate(item.opened)}` : ` · ${formatDate(item.opened)}`}
         </p>
         <h1 className="display">{item.title}</h1>
         <p className="lede">{item.question}</p>
@@ -45,17 +61,7 @@ export default async function ExperimentPage({ params }: Props) {
             <p key={paragraph}>{paragraph}</p>
           ))}
         </div>
-        {item.status === "abierto" ? (
-          <div className="banner section">
-            <p>
-              <strong>Qué está abierto.</strong> {item.open}
-            </p>
-          </div>
-        ) : (
-          <div className="banner section">
-            <p>Cerrado. Queda el registro.</p>
-          </div>
-        )}
+        <div className="banner section">{statusBanner(item.status, item.open)}</div>
         {related.length > 0 ? (
           <div className="section">
             <p className="kicker">Notas ligadas</p>
@@ -75,7 +81,7 @@ export default async function ExperimentPage({ params }: Props) {
             </Link>
           ) : null}
           <Link className="button ghost" href="/experimentos">
-            Volver al índice
+            Todos los experimentos
           </Link>
         </div>
       </div>

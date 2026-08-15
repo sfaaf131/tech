@@ -25,7 +25,7 @@ export const notes: Note[] = [
     date: "2026-08-14",
     summary: "Kursox es una agencia aparte. Este dominio no es su landing.",
     body: [
-      "Kursox existe. Es una agencia, y es otra puerta.",
+      "Kursox existe. Es una agencia, y es otra cosa.",
       "kondax.tech no es su landing, no lista sus servicios, no pide cotización. Si llegaste por Kursox, esto igual no es un brochure con otro nombre.",
     ],
   },
@@ -37,7 +37,7 @@ export const notes: Note[] = [
     related: "este-sitio",
     body: [
       "Antes de este taller el dominio mostraba solo “kondax.tech”. No era un WIP de marketing. Era la decisión de no rellenar.",
-      "Este lab es la primera cosa publicada después de eso. Sigue aplicando la misma regla: si no hay objeto, no hay ítem.",
+      "Este taller es la primera cosa publicada después de eso. Sigue aplicando la misma regla: si no hay caso, no hay ítem.",
     ],
   },
 ];

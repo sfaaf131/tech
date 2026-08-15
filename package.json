@@ -11,7 +11,8 @@
     "start": "next start --hostname 0.0.0.0 --port 3000",
     "lint": "eslint",
     "test": "tsx scripts/check.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "ci": "npm run lint && npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
     "next": "16.3.0",

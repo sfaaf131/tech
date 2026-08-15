@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Cooperar",
   description: "Entra a un experimento, deja una nota, o propone trabajo conjunto.",
   alternates: { canonical: "/cooperar" },
+  openGraph: { url: "/cooperar" },
 };
 
 export default function CooperatePage() {
@@ -14,10 +15,10 @@ export default function CooperatePage() {
     <main id="contenido" className="page" tabIndex={-1}>
       <div className="shell">
         <div className="prose">
-          <p className="kicker">puerta</p>
+          <p className="kicker">kondax.tech</p>
           <h1 className="display">Cooperar</h1>
           <p className="lede">
-            Escribe con objeto. “Hola, conectemos” no sirve. Si no hay encaje, no invento uno.
+            Escribe algo concreto. “Hola, conectemos” no sirve. Si no hay encaje, no invento uno.
           </p>
           <p className="section-lead">
             Llega a {site.email}. Respondo si hay algo que hacer juntos.

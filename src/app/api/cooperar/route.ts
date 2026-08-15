@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
-import { clientIp, limited } from "@/lib/rate-limit";
+import { clientIp, limited, retryAfterSec } from "@/lib/rate-limit";
 import { cooperateSchema, isHoneypot, isTooFast, parseJsonObject } from "@/lib/schemas";
 import { saveCooperation } from "@/lib/store";
 
 export async function POST(request: Request) {
-  if (limited(clientIp(request))) {
-    return NextResponse.json({ error: "Demasiados envíos. Espera un rato." }, { status: 429 });
+  const ip = clientIp(request);
+  if (limited(ip)) {
+    return NextResponse.json(
+      { error: "Demasiados envíos. Espera un rato." },
+      { status: 429, headers: { "Retry-After": String(retryAfterSec(ip)) } },
+    );
   }
 
   let raw: unknown;
@@ -31,7 +35,6 @@ export async function POST(request: Request) {
   const persist = saveCooperation(parsed.data);
   return NextResponse.json({
     ok: true,
-    id: crypto.randomUUID(),
     stored: persist.stored,
   });
 }

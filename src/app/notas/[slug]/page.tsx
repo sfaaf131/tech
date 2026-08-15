@@ -16,11 +16,16 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const item = noteBySlug(slug);
-  if (!item) return { title: "Nota" };
+  if (!item) return { title: "Nota", robots: { index: false, follow: false } };
   return {
     title: item.title,
     description: item.summary,
     alternates: { canonical: `/notas/${item.slug}` },
+    openGraph: {
+      url: `/notas/${item.slug}`,
+      type: "article",
+      publishedTime: item.date,
+    },
   };
 }
 
@@ -44,7 +49,7 @@ export default async function NotePage({ params }: Props) {
         </div>
         {related ? (
           <p className="muted">
-            Ligado a: <Link href={`/experimentos/${related.slug}`}>{related.title}</Link>
+            Va con: <Link href={`/experimentos/${related.slug}`}>{related.title}</Link>
           </p>
         ) : null}
         <div className="actions">

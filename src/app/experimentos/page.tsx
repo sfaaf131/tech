@@ -5,8 +5,9 @@ import { experimentsSorted } from "@/lib/lab";
 
 export const metadata: Metadata = {
   title: "Experimentos",
-  description: "Lo que está en el banco. Poco, y a la vista.",
+  description: "Lo que está publicado. Poco, y a la vista.",
   alternates: { canonical: "/experimentos" },
+  openGraph: { url: "/experimentos" },
 };
 
 export default function ExperimentsPage() {
@@ -16,12 +17,9 @@ export default function ExperimentsPage() {
     <main id="contenido" className="page" tabIndex={-1}>
       <div className="shell">
         <div className="prose">
-          <p className="kicker">taller</p>
+          <p className="kicker">kondax.tech</p>
           <h1 className="display">Experimentos</h1>
-          <p className="lede muted">
-            Un experimento es una pregunta en construcción, no un producto vendido. Si no hay más
-            ítems, no se rellena.
-          </p>
+          <p className="lede muted">Una pregunta en construcción. Las que hay están abajo.</p>
         </div>
         <div className="section">
           {items.length === 0 ? (
@@ -35,8 +33,11 @@ export default function ExperimentsPage() {
           )}
         </div>
         <div className="actions">
-          <Link className="button ghost" href="/cooperar?intento=proponer">
-            Proponer trabajo conjunto
+          <Link className="button" href="/cooperar?intento=entrar">
+            Entrar a uno abierto
+          </Link>
+          <Link className="button ghost" href="/cooperar?intento=nota">
+            Dejar una nota
           </Link>
         </div>
       </div>

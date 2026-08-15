@@ -12,13 +12,16 @@ export default function NotFound() {
       <div className="shell prose">
         <p className="kicker">404</p>
         <h1 className="display">No está.</h1>
-        <p className="lede muted">Esa ruta no existe.</p>
+        <p className="lede muted">Esa URL no existe en este taller.</p>
         <div className="actions">
           <Link className="button" href="/">
-            Volver
+            Al taller
           </Link>
           <Link className="button ghost" href="/experimentos">
             Experimentos
+          </Link>
+          <Link className="button ghost" href="/notas">
+            Notas
           </Link>
         </div>
       </div>
