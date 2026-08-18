@@ -1,9 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState, type FormEvent } from "react";
-import { experiments } from "@/lib/lab";
+import { useRef, useState, type FormEvent } from "react";
+import { experiments, openExperiments } from "@/lib/lab";
+import {
+  asIntent,
+  cooperateCopy,
+  cooperateFieldIds,
+  cooperateFieldOrder,
+  honeypotName,
+} from "@/lib/cooperate";
 import {
   cooperateIntents,
   experimentHints,
@@ -14,42 +20,27 @@ import {
 
 type FieldErrors = Record<string, string[] | undefined>;
 
-function asIntent(value: string | null): CooperateIntent | "" {
-  return cooperateIntents.includes(value as CooperateIntent) ? (value as CooperateIntent) : "";
-}
-
-const fieldFocus: Record<string, string> = {
-  intent: "coop-intent-entrar",
-  experiment: "coop-experiment",
-  name: "coop-name",
-  email: "coop-email",
-  message: "coop-message",
-  link: "coop-link",
-};
-
-export function CooperateForm() {
-  const search = useSearchParams();
+export function CooperateForm({
+  presetIntent: initialIntent,
+  presetExperiment,
+}: {
+  presetIntent: CooperateIntent | "";
+  presetExperiment: string;
+}) {
   const startedAt = useRef("");
-  useEffect(() => {
-    startedAt.current = String(Date.now());
-  }, []);
-  const presetExperiment = experiments.some(
-    (item) => item.slug === (search.get("experimento") ?? search.get("exp")),
-  )
-    ? (search.get("experimento") ?? search.get("exp") ?? "")
-    : "";
-  const presetIntent = asIntent(search.get("intento") ?? search.get("intent")) || (presetExperiment ? "entrar" : "");
-
   const [status, setStatus] = useState<"idle" | "busy" | "ok" | "error">("idle");
   const [detail, setDetail] = useState<string | null>(null);
   const [fields, setFields] = useState<FieldErrors>({});
-  const [intent, setIntent] = useState<CooperateIntent | "">(presetIntent);
+  const [intent, setIntent] = useState<CooperateIntent | "">(asIntent(initialIntent));
+
+  function markStarted() {
+    if (!startedAt.current) startedAt.current = String(Date.now());
+  }
 
   function focusFirst(next: FieldErrors) {
-    const order = ["intent", "experiment", "name", "email", "message", "link"];
-    const first = order.find((key) => next[key]?.[0]);
+    const first = cooperateFieldOrder.find((key) => next[key]?.[0]);
     if (!first) return;
-    document.getElementById(fieldFocus[first])?.focus();
+    document.getElementById(cooperateFieldIds[first])?.focus();
   }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -91,7 +82,7 @@ export function CooperateForm() {
       }
 
       setStatus("ok");
-      setDetail("Llegó. Si hay encaje, escribo a este correo. Si no, no invento una reunión.");
+      setDetail(cooperateCopy.successDetail);
     } catch {
       setStatus("error");
       setDetail("No salió. El mensaje sigue en el cuadro: puedes reintentar.");
@@ -101,7 +92,7 @@ export function CooperateForm() {
   if (status === "ok") {
     return (
       <div className="banner" role="status">
-        <h2 className="row-title">Llegó.</h2>
+        <h2 className="row-title">{cooperateCopy.successTitle}</h2>
         <p className="lede ok">{detail}</p>
         <div className="actions">
           <Link className="button ghost" href="/">
@@ -115,11 +106,19 @@ export function CooperateForm() {
     );
   }
 
+  const experimentOptions = intent === "entrar" ? openExperiments() : experiments;
+
   return (
-    <form className="form" onSubmit={onSubmit} noValidate aria-busy={status === "busy"}>
+    <form
+      className="form"
+      onSubmit={onSubmit}
+      onInput={markStarted}
+      noValidate
+      aria-busy={status === "busy"}
+    >
       <div className="hp" aria-hidden="true">
-        <label htmlFor="company_website">Sitio web</label>
-        <input id="company_website" type="text" name="company_website" tabIndex={-1} autoComplete="off" />
+        <label htmlFor={honeypotName}>Sitio web</label>
+        <input id={honeypotName} type="text" name={honeypotName} tabIndex={-1} autoComplete="off" />
       </div>
       {detail ? (
         <p className="alert" role="alert">
@@ -143,7 +142,10 @@ export function CooperateForm() {
                 name="intent"
                 value={item}
                 checked={intent === item}
-                onChange={() => setIntent(item)}
+                onChange={() => {
+                  markStarted();
+                  setIntent(item);
+                }}
                 required
               />
               {intentLabels[item]}
@@ -173,7 +175,7 @@ export function CooperateForm() {
           aria-describedby={fields.experiment ? "coop-experiment-error" : "coop-experiment-hint"}
         >
           <option value="">Ninguno</option>
-          {experiments.map((item) => (
+          {experimentOptions.map((item) => (
             <option key={item.slug} value={item.slug}>
               {item.title}
             </option>
@@ -228,7 +230,7 @@ export function CooperateForm() {
           </p>
         ) : (
           <p id="coop-email-hint" className="hint">
-            Ahí escribo. No hay lista ni newsletter.
+            {cooperateCopy.emailHint}
           </p>
         )}
       </label>

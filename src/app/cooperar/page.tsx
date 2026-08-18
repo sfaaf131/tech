@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { CooperateForm } from "@/components/forms/cooperate-form";
-import { site } from "@/lib/site";
+import { cooperateCopy, presetFromSearch } from "@/lib/cooperate";
 
 export const metadata: Metadata = {
   title: "Cooperar",
@@ -10,7 +9,18 @@ export const metadata: Metadata = {
   openGraph: { url: "/cooperar" },
 };
 
-export default function CooperatePage() {
+type Props = {
+  searchParams: Promise<{
+    intento?: string | string[];
+    intent?: string | string[];
+    experimento?: string | string[];
+    exp?: string | string[];
+  }>;
+};
+
+export default async function CooperatePage({ searchParams }: Props) {
+  const preset = presetFromSearch(await searchParams);
+
   return (
     <main id="contenido" className="page" tabIndex={-1}>
       <div className="shell">
@@ -20,14 +30,13 @@ export default function CooperatePage() {
           <p className="lede">
             Escribe algo concreto. “Hola, conectemos” no sirve. Si no hay encaje, no invento uno.
           </p>
-          <p className="section-lead">
-            Llega a {site.email}. Respondo si hay algo que hacer juntos.
-          </p>
+          <p className="section-lead">{cooperateCopy.pageLead}</p>
         </div>
         <div className="section">
-          <Suspense fallback={<p className="muted">Cargando el formulario…</p>}>
-            <CooperateForm />
-          </Suspense>
+          <CooperateForm
+            presetIntent={preset.presetIntent}
+            presetExperiment={preset.presetExperiment}
+          />
         </div>
       </div>
     </main>

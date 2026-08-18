@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { experiments } from "./lab";
+import { experiments, isOpenExperimentSlug } from "./lab";
 
 export const cooperateIntents = ["entrar", "nota", "proponer"] as const;
 
@@ -49,7 +49,11 @@ function isHttpUrl(value: string) {
 
 export const cooperateSchema = z
   .object({
-    name: z.string({ error: "Pon un nombre real, corto." }).trim().min(2, "Pon un nombre real, corto.").max(80),
+    name: z
+      .string({ error: "Pon un nombre real, corto." })
+      .trim()
+      .min(2, "Pon un nombre real, corto.")
+      .max(80, "Pon un nombre real, corto."),
     email: z.email({ error: "Ese correo no se puede usar." }),
     intent: z.enum(cooperateIntents, { error: "Elige una de las tres opciones." }),
     experiment: z
@@ -59,7 +63,7 @@ export const cooperateSchema = z
         const trimmed = value?.trim() ?? "";
         return trimmed.length > 0 ? trimmed : undefined;
       })
-      .pipe(z.enum(experimentSlugs).optional()),
+      .pipe(z.enum(experimentSlugs, { error: "Ese experimento no está publicado." }).optional()),
     message: z
       .string({ error: "Muy corto. Di qué harías, qué viste, o qué corrección traes." })
       .trim()
@@ -68,7 +72,7 @@ export const cooperateSchema = z
     link: z
       .string()
       .trim()
-      .max(240)
+      .max(240, "Ese enlace es muy largo.")
       .optional()
       .transform((value) => (value ? value : undefined))
       .refine((value) => !value || isHttpUrl(value), { error: "Eso no parece un enlace." }),
@@ -79,6 +83,13 @@ export const cooperateSchema = z
         code: "custom",
         path: ["experiment"],
         message: "Si quieres entrar, elige un experimento publicado.",
+      });
+    }
+    if (value.intent === "entrar" && value.experiment && !isOpenExperimentSlug(value.experiment)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["experiment"],
+        message: "Ese experimento no está abierto.",
       });
     }
     if (isEmptyGreeting(value.message)) {
@@ -107,11 +118,11 @@ export function isHoneypot(body: Record<string, unknown>): boolean {
 export function isTooFast(body: Record<string, unknown>, now = Date.now()) {
   if (!Object.hasOwn(body, "t")) return true;
   const raw = body.t;
-  if (raw === "") return false;
   if (typeof raw !== "string" && typeof raw !== "number") return true;
-  const started = Number(raw);
-  if (!Number.isFinite(started)) return true;
-  if (started > now) return false;
+  if (typeof raw === "string" && raw.trim() === "") return true;
+  const started = Number(typeof raw === "string" ? raw.trim() : raw);
+  if (!Number.isFinite(started) || started <= 0) return true;
+  if (started > now) return true;
   return now - started < 3000;
 }
 

@@ -3,9 +3,24 @@ import nextConfig from "../next.config";
 import { POST } from "../src/app/api/cooperar/route";
 import robots from "../src/app/robots";
 import sitemap from "../src/app/sitemap";
-import { experimentBySlug, experiments, experimentsSorted, openExperiments, statusLabel } from "../src/lib/lab";
-import { noteBySlug, notes } from "../src/lib/notes";
-import { clientIp, limited } from "../src/lib/rate-limit";
+import {
+  asIntent,
+  cooperateCopy,
+  cooperateFieldIds,
+  cooperateFieldOrder,
+  honeypotName,
+  presetFromSearch,
+} from "../src/lib/cooperate";
+import {
+  experimentBySlug,
+  experiments,
+  experimentsSorted,
+  isOpenExperimentSlug,
+  openExperiments,
+  statusLabel,
+} from "../src/lib/lab";
+import { noteBySlug, notes, notesSorted } from "../src/lib/notes";
+import { clientIp, limited, retryAfterSec } from "../src/lib/rate-limit";
 import {
   cooperateIntents,
   cooperateSchema,
@@ -31,6 +46,8 @@ assert.ok(experimentBySlug("este-sitio"));
 assert.ok(experimentBySlug("la-puerta"));
 assert.equal(experimentBySlug("missing"), undefined);
 assert.equal(openExperiments().length, 2);
+assert.equal(isOpenExperimentSlug("este-sitio"), true);
+assert.equal(isOpenExperimentSlug("missing"), false);
 assert.equal(experimentsSorted()[0]?.status, "abierto");
 assert.equal(statusLabel("abierto"), "en curso");
 assert.equal(statusLabel("pausa"), "en pausa");
@@ -42,10 +59,18 @@ assert.equal(new Set(notes.map((item) => item.slug)).size, 3);
 assert.ok(noteBySlug("se-borro-la-factory"));
 assert.ok(noteBySlug("kursox-no-es-esto"));
 assert.ok(noteBySlug("en-blanco-a-proposito"));
+assert.deepEqual(
+  notesSorted().map((item) => item.slug),
+  [...notes].sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug)).map((item) => item.slug),
+);
 
 const publicText = [
   site.tagline,
   site.description,
+  cooperateCopy.pageLead,
+  cooperateCopy.successTitle,
+  cooperateCopy.successDetail,
+  cooperateCopy.emailHint,
   ...experiments.flatMap((item) => [item.title, item.summary, item.open, ...item.body]),
   ...notes.flatMap((item) => [item.title, item.summary, ...item.body]),
 ]
@@ -58,8 +83,26 @@ for (const banned of bannedOfferCopy) {
 
 assert.equal(publicText.includes("en el banco"), false);
 assert.equal(publicText.includes("bitácora"), false);
+assert.equal(/llegó|llega a/.test(publicText), false, "public copy still claims the note arrived");
+assert.match(cooperateCopy.pageLead, /no guarda/i);
+assert.match(cooperateCopy.successDetail, /no guarda/i);
 
 assert.deepEqual([...cooperateIntents], ["entrar", "nota", "proponer"]);
+assert.equal(asIntent("entrar"), "entrar");
+assert.equal(asIntent("factory"), "");
+assert.deepEqual(presetFromSearch({ intento: "nota" }), { presetExperiment: "", presetIntent: "nota" });
+assert.deepEqual(presetFromSearch({ exp: "este-sitio" }), {
+  presetExperiment: "este-sitio",
+  presetIntent: "entrar",
+});
+assert.deepEqual(presetFromSearch({ experimento: "missing", intento: "proponer" }), {
+  presetExperiment: "",
+  presetIntent: "proponer",
+});
+assert.equal(honeypotName, "company_website");
+assert.ok(isHoneypot({ [honeypotName]: "x" }));
+assert.deepEqual([...cooperateFieldOrder], ["intent", "experiment", "name", "email", "message", "link"]);
+assert.equal(cooperateFieldIds.experiment, "coop-experiment");
 
 const good = cooperateSchema.safeParse({
   name: "Ana Pérez",
@@ -102,7 +145,7 @@ if (!empty.success) {
     const message = fields[field]?.[0];
     assert.ok(message, `${field} should have an error`);
     assert.equal(
-      /expected|received|invalid_type|invalid_value|invalid_enum/i.test(message),
+      /expected|received|invalid_type|invalid_value|invalid_enum|too big/i.test(message),
       false,
       `${field} should fail in Spanish, got: ${message}`,
     );
@@ -127,15 +170,19 @@ assert.equal(
   }).success,
   false,
 );
-assert.equal(
-  cooperateSchema.safeParse({
-    name: "A".repeat(81),
-    email: "ana@lab.cl",
-    intent: "nota",
-    message: "La home se entiende. El footer podría repetir que no es una agencia.",
-  }).success,
-  false,
-);
+
+const longName = cooperateSchema.safeParse({
+  name: "A".repeat(81),
+  email: "ana@lab.cl",
+  intent: "nota",
+  message: "La home se entiende. El footer podría repetir que no es una agencia.",
+});
+assert.equal(longName.success, false);
+if (!longName.success) {
+  const message = longName.error.flatten().fieldErrors.name?.[0] ?? "";
+  assert.ok(message);
+  assert.equal(/expected|received|invalid_type|too big/i.test(message), false, message);
+}
 
 const longMessage = cooperateSchema.safeParse({
   name: "Ana Pérez",
@@ -148,16 +195,19 @@ if (!longMessage.success) {
   assert.match(longMessage.error.flatten().fieldErrors.message?.[0] ?? "", /larga|Córtala/);
 }
 
-assert.equal(
-  cooperateSchema.safeParse({
-    name: "Ana Pérez",
-    email: "ana@lab.cl",
-    intent: "nota",
-    experiment: "factory",
-    message: "La home se entiende. El footer podría repetir que no es una agencia.",
-  }).success,
-  false,
-);
+const unknownExperiment = cooperateSchema.safeParse({
+  name: "Ana Pérez",
+  email: "ana@lab.cl",
+  intent: "nota",
+  experiment: "factory",
+  message: "La home se entiende. El footer podría repetir que no es una agencia.",
+});
+assert.equal(unknownExperiment.success, false);
+if (!unknownExperiment.success) {
+  const message = unknownExperiment.error.flatten().fieldErrors.experiment?.[0] ?? "";
+  assert.match(message, /publicado|experimento/i);
+  assert.equal(/expected|invalid_enum|invalid_value/i.test(message), false, message);
+}
 
 const badLink = cooperateSchema.safeParse({
   name: "Ana Pérez",
@@ -169,6 +219,20 @@ const badLink = cooperateSchema.safeParse({
 assert.equal(badLink.success, false);
 if (!badLink.success) {
   assert.match(badLink.error.flatten().fieldErrors.link?.[0] ?? "", /enlace/i);
+}
+
+const longLink = cooperateSchema.safeParse({
+  name: "Ana Pérez",
+  email: "ana@lab.cl",
+  intent: "nota",
+  message: "La home se entiende. El footer podría repetir que no es una agencia.",
+  link: `https://lab.cl/${"x".repeat(240)}`,
+});
+assert.equal(longLink.success, false);
+if (!longLink.success) {
+  const message = longLink.error.flatten().fieldErrors.link?.[0] ?? "";
+  assert.match(message, /largo/i);
+  assert.equal(/too big|expected/i.test(message), false, message);
 }
 
 assert.equal(
@@ -256,10 +320,12 @@ assert.ok(parseJsonObject({ name: "Ana" }));
 const now = Date.now();
 assert.equal(isTooFast({}, now), true);
 assert.equal(isTooFast({ t: "nope" }, now), true);
-assert.equal(isTooFast({ t: "" }, now), false);
+assert.equal(isTooFast({ t: "" }, now), true);
+assert.equal(isTooFast({ t: "   " }, now), true);
+assert.equal(isTooFast({ t: 0 }, now), true);
 assert.equal(isTooFast({ t: now - 500 }, now), true);
 assert.equal(isTooFast({ t: String(now - 4000) }, now), false);
-assert.equal(isTooFast({ t: now + 10_000 }, now), false);
+assert.equal(isTooFast({ t: now + 10_000 }, now), true);
 
 assert.equal(limited("lim-a"), false);
 assert.equal(limited("lim-a"), false);
@@ -274,6 +340,11 @@ assert.equal(limited("lim-reset", 2, 1000, start), false);
 assert.equal(limited("lim-reset", 2, 1000, start + 1), false);
 assert.equal(limited("lim-reset", 2, 1000, start + 2), true);
 assert.equal(limited("lim-reset", 2, 1000, start + 1001), false);
+
+const retryAt = 5_000_000;
+limited("lim-retry", 1, 10_000, retryAt);
+assert.equal(retryAfterSec("lim-retry", retryAt + 1000), 9);
+assert.equal(retryAfterSec("missing-retry", retryAt), 3600);
 
 assert.equal(
   clientIp(new Request("http://x", { headers: { "x-forwarded-for": "1.1.1.1, 2.2.2.2" } })),
@@ -329,58 +400,96 @@ const valid = {
   message: "Vi este sitio. Puedo revisar la copy del taller y devolver notas concretas sobre fricción.",
 };
 
-void (async () => {
-  const redirects = await nextConfig.redirects!();
-  const bySource = Object.fromEntries(redirects.map((item) => [item.source, item.destination]));
-  assert.equal(bySource["/lab"], "/experimentos");
-  assert.equal(bySource["/contacto"], "/cooperar");
-  assert.equal(bySource["/fabrica"], "/");
-  assert.equal(bySource["/servicios"], "/");
+async function main() {
+  const timeout = setTimeout(() => {
+    console.error("check timed out");
+    process.exit(1);
+  }, 30_000);
 
-  const badJson = await POST(coopRequest("{", "post-json"));
-  assert.equal(badJson.status, 400);
-  assert.match(String((await badJson.json()).error), /JSON/);
+  try {
+    const redirects = await nextConfig.redirects!();
+    const bySource = Object.fromEntries(redirects.map((item) => [item.source, item.destination]));
+    assert.equal(bySource["/lab"], "/experimentos");
+    assert.equal(bySource["/lab/:slug"], "/experimentos/:slug");
+    assert.equal(bySource["/abrir"], "/cooperar");
+    assert.equal(bySource["/contacto"], "/cooperar");
+    assert.equal(bySource["/fabrica"], "/");
+    assert.equal(bySource["/servicios"], "/");
+    assert.equal(bySource["/cotizador"], "/");
+    assert.equal(bySource["/app/:path*"], "/");
+    assert.equal(redirects.length, 19);
 
-  const arrayBody = await POST(coopRequest(["x"], "post-array"));
-  assert.equal(arrayBody.status, 400);
-  assert.match(String((await arrayBody.json()).error), /JSON/);
-
-  const honeypot = await POST(
-    coopRequest({ ...valid, t: Date.now() - 4000, company_website: "https://spam.test" }, "post-hp"),
-  );
-  assert.equal(honeypot.status, 200);
-  const honeypotBody = await honeypot.json();
-  assert.equal(honeypotBody.stored, "pending");
-  assert.equal(honeypotBody.id, undefined);
-
-  const tooFast = await POST(coopRequest({ ...valid, t: Date.now() }, "post-fast"));
-  assert.equal(tooFast.status, 200);
-  assert.equal((await tooFast.json()).stored, "pending");
-
-  const ok = await POST(coopRequest({ ...valid, t: Date.now() - 4000 }, "post-ok"));
-  assert.equal(ok.status, 200);
-  const okBody = await ok.json();
-  assert.equal(okBody.ok, true);
-  assert.equal(okBody.stored, "pending");
-  assert.equal(okBody.id, undefined);
-
-  const missing = await POST(coopRequest({ t: Date.now() - 4000 }, "post-empty"));
-  assert.equal(missing.status, 400);
-  const missingBody = await missing.json();
-  assert.ok(missingBody.error.fieldErrors.name);
-  assert.ok(missingBody.error.fieldErrors.email);
-
-  let last = 200;
-  for (let index = 0; index < 6; index += 1) {
-    const response = await POST(coopRequest({ ...valid, t: Date.now() - 4000 }, "post-rate"));
-    last = response.status;
-    if (index === 5) {
-      assert.equal(response.status, 429);
-      assert.ok(response.headers.get("retry-after"));
-      assert.match(String((await response.json()).error), /envíos|Espera/i);
+    const headers = await nextConfig.headers!();
+    const keys = new Set((headers[0]?.headers ?? []).map((item) => item.key));
+    for (const key of [
+      "Strict-Transport-Security",
+      "X-Content-Type-Options",
+      "Referrer-Policy",
+      "X-Frame-Options",
+      "Permissions-Policy",
+      "X-DNS-Prefetch-Control",
+    ]) {
+      assert.ok(keys.has(key), `missing header ${key}`);
     }
-  }
-  assert.equal(last, 429);
 
-  console.log("ok");
-})();
+    const badJson = await POST(coopRequest("{", "post-json"));
+    assert.equal(badJson.status, 400);
+    assert.match(String((await badJson.json()).error), /JSON/);
+
+    const arrayBody = await POST(coopRequest(["x"], "post-array"));
+    assert.equal(arrayBody.status, 400);
+    assert.match(String((await arrayBody.json()).error), /JSON/);
+
+    const honeypot = await POST(
+      coopRequest({ ...valid, t: Date.now() - 4000, company_website: "https://spam.test" }, "post-hp"),
+    );
+    assert.equal(honeypot.status, 200);
+    const honeypotBody = await honeypot.json();
+    assert.equal(honeypotBody.stored, "pending");
+    assert.equal(honeypotBody.id, undefined);
+
+    const tooFast = await POST(coopRequest({ ...valid, t: Date.now() }, "post-fast"));
+    assert.equal(tooFast.status, 200);
+    assert.equal((await tooFast.json()).stored, "pending");
+
+    const ok = await POST(coopRequest({ ...valid, t: Date.now() - 4000 }, "post-ok"));
+    assert.equal(ok.status, 200);
+    const okBody = await ok.json();
+    assert.equal(okBody.ok, true);
+    assert.equal(okBody.stored, "pending");
+    assert.equal(okBody.id, undefined);
+
+    const missing = await POST(coopRequest({ t: Date.now() - 4000 }, "post-empty"));
+    assert.equal(missing.status, 400);
+    const missingBody = await missing.json();
+    assert.ok(missingBody.error.fieldErrors.name);
+    assert.ok(missingBody.error.fieldErrors.email);
+
+    for (let index = 0; index < 6; index += 1) {
+      const response = await POST(coopRequest({ t: Date.now() - 4000 }, "post-400-rate"));
+      assert.equal(response.status, 400, "invalid bodies must not increment the cooperate bucket");
+    }
+
+    let last = 200;
+    for (let index = 0; index < 6; index += 1) {
+      const response = await POST(coopRequest({ ...valid, t: Date.now() - 4000 }, "post-rate"));
+      last = response.status;
+      if (index === 5) {
+        assert.equal(response.status, 429);
+        const retryAfter = Number(response.headers.get("retry-after"));
+        assert.equal(Number.isInteger(retryAfter) && retryAfter > 0, true);
+        assert.match(String((await response.json()).error), /envíos|Espera/i);
+      }
+    }
+    assert.equal(last, 429);
+
+    console.log("ok");
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

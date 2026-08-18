@@ -2,11 +2,12 @@ import Link from "next/link";
 import { ExperimentRow } from "@/components/lab/experiment-row";
 import { NoteRow } from "@/components/lab/note-row";
 import { experimentsSorted } from "@/lib/lab";
-import { notes } from "@/lib/notes";
+import { notesSorted } from "@/lib/notes";
 import { site } from "@/lib/site";
 
 export default function HomePage() {
   const published = experimentsSorted();
+  const dated = notesSorted();
 
   return (
     <main id="contenido" className="page" tabIndex={-1}>
@@ -49,10 +50,10 @@ export default function HomePage() {
             </div>
             <Link href="/notas">Todas</Link>
           </div>
-          {notes.length === 0 ? (
+          {dated.length === 0 ? (
             <p className="muted">No hay notas publicadas.</p>
           ) : (
-            notes.map((item) => <NoteRow key={item.slug} item={item} heading="h3" />)
+            dated.map((item) => <NoteRow key={item.slug} item={item} heading="h3" />)
           )}
         </section>
 

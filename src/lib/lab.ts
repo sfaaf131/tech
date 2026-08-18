@@ -53,6 +53,10 @@ export function openExperiments() {
   return experiments.filter((item) => item.status === "abierto" && item.openToJoin);
 }
 
+export function isOpenExperimentSlug(slug: string) {
+  return openExperiments().some((item) => item.slug === slug);
+}
+
 export function statusLabel(status: ExperimentStatus) {
   if (status === "abierto") return "en curso";
   if (status === "pausa") return "en pausa";

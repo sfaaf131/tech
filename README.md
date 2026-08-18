@@ -11,12 +11,14 @@ No es la landing de Kursox. No es una factory.
 - `/notas` — recortes fechados
 - `/cooperar` — entrar, dejar nota, o proponer trabajo conjunto
 
-El formulario valida en español, tiene honeypot y rate limit. `DATABASE_URL` no persiste: el POST responde `{ stored: "pending" }`. No hay portal ni auth.
+El formulario valida en español, tiene honeypot y rate limit. `DATABASE_URL` no persiste: el POST responde `{ stored: "pending" }`. La copy pública no finge que el envío llegó al correo. No hay portal ni auth.
 
 ## Local
 
+Node 20.9+.
+
 ```bash
-npm install
+npm ci
 npm run lint
 npm run typecheck
 npm test

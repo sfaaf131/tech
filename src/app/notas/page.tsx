@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { NoteRow } from "@/components/lab/note-row";
-import { notes } from "@/lib/notes";
+import { notes, notesSorted } from "@/lib/notes";
 
 export const metadata: Metadata = {
   title: "Notas",
@@ -11,6 +11,8 @@ export const metadata: Metadata = {
 };
 
 export default function NotesPage() {
+  const dated = notesSorted();
+
   return (
     <main id="contenido" className="page" tabIndex={-1}>
       <div className="shell">
@@ -27,7 +29,7 @@ export default function NotesPage() {
               Si viste un error, puedes dejar una.
             </p>
           ) : (
-            notes.map((item) => <NoteRow key={item.slug} item={item} />)
+            dated.map((item) => <NoteRow key={item.slug} item={item} />)
           )}
         </div>
         <div className="actions">

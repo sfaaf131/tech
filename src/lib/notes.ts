@@ -45,3 +45,11 @@ export const notes: Note[] = [
 export function noteBySlug(slug: string) {
   return notes.find((item) => item.slug === slug);
 }
+
+export function notesSorted() {
+  return [...notes].sort((a, b) => {
+    const byDate = b.date.localeCompare(a.date);
+    if (byDate !== 0) return byDate;
+    return a.slug.localeCompare(b.slug);
+  });
+}

@@ -1,6 +1,13 @@
 const hits = new Map<string, { count: number; reset: number }>();
 
+function evict(now: number) {
+  for (const [key, value] of hits) {
+    if (value.reset < now) hits.delete(key);
+  }
+}
+
 export function limited(ip: string, max = 5, windowMs = 60 * 60 * 1000, now = Date.now()) {
+  evict(now);
   const current = hits.get(ip);
   if (!current || current.reset < now) {
     hits.set(ip, { count: 1, reset: now + windowMs });
