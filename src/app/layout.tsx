@@ -71,7 +71,7 @@ const websiteJsonLd = {
   inLanguage: "es-CL",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es-CL" className={sans.variable}>
       <body>

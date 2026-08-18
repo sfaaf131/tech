@@ -15,7 +15,7 @@ npm run build
 npm run ci
 ```
 
-`npm run ci` is what Vercel runs as `buildCommand`.
+`npm run ci` is what Vercel runs as `buildCommand`. `typecheck` runs `next typegen` first so `tsc` works on a clean checkout.
 
 ## Content
 
