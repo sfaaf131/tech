@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import nextConfig from "../next.config";
 import { POST } from "../src/app/api/cooperar/route";
 import robots from "../src/app/robots";
@@ -59,6 +61,20 @@ assert.equal(new Set(notes.map((item) => item.slug)).size, 3);
 assert.ok(noteBySlug("se-borro-la-factory"));
 assert.ok(noteBySlug("kursox-no-es-esto"));
 assert.ok(noteBySlug("en-blanco-a-proposito"));
+for (const note of notes) {
+  assert.match(note.date, /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(Number.isNaN(Date.parse(`${note.date}T12:00:00Z`)), false);
+  if (note.related) {
+    assert.ok(experimentBySlug(note.related), `related ${note.related} is not a published experiment`);
+  }
+}
+for (const item of experiments) {
+  assert.match(item.opened, /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(Number.isNaN(Date.parse(`${item.opened}T12:00:00Z`)), false);
+  if (item.openToJoin) {
+    assert.equal(item.status, "abierto", `${item.slug} is joinable but not abierto`);
+  }
+}
 assert.deepEqual(
   notesSorted().map((item) => item.slug),
   [...notes].sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug)).map((item) => item.slug),
@@ -86,6 +102,29 @@ assert.equal(publicText.includes("bitácora"), false);
 assert.equal(/llegó|llega a/.test(publicText), false, "public copy still claims the note arrived");
 assert.match(cooperateCopy.pageLead, /no guarda/i);
 assert.match(cooperateCopy.successDetail, /no guarda/i);
+
+function walkTs(dir: string): string[] {
+  const out: string[] = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...walkTs(path));
+    else if (/\.(ts|tsx)$/.test(entry.name)) out.push(path);
+  }
+  return out;
+}
+
+const formSource = readFileSync(join(process.cwd(), "src/components/forms/cooperate-form.tsx"), "utf8");
+assert.equal(formSource.includes("team@kondax.tech"), false, "form hardcodes the mailbox");
+
+const uiSource = [...walkTs(join(process.cwd(), "src/app")), ...walkTs(join(process.cwd(), "src/components"))]
+  .map((file) => readFileSync(file, "utf8"))
+  .join("\n")
+  .toLowerCase();
+
+for (const banned of bannedOfferCopy) {
+  assert.equal(uiSource.includes(banned), false, `ui source still has "${banned}"`);
+}
+assert.equal(/llegó|llega a/.test(uiSource), false, "ui source still claims the note arrived");
 
 assert.deepEqual([...cooperateIntents], ["entrar", "nota", "proponer"]);
 assert.equal(asIntent("entrar"), "entrar");
@@ -263,7 +302,7 @@ const greeting = cooperateSchema.safeParse({
   name: "Ana Pérez",
   email: "ana@lab.cl",
   intent: "proponer",
-  message: "Hola, conectemos y veamos si podemos hacer algo juntos pronto.",
+  message: "Hola, conectemos. Hola, conectemos. Hola, conectemos.",
 });
 assert.equal(greeting.success, false);
 if (!greeting.success) {
@@ -275,10 +314,33 @@ assert.equal(isEmptyGreeting("hello"), true);
 assert.equal(isEmptyGreeting(""), true);
 assert.equal(isEmptyGreeting(" "), true);
 assert.equal(isEmptyGreeting("conectemos"), true);
+assert.equal(isEmptyGreeting("Hola, conectemos"), true);
+assert.equal(isEmptyGreeting("hi hello"), true);
 assert.equal(
   isEmptyGreeting("Vi la puerta. El select de experimento no se entiende en el celular."),
   false,
 );
+assert.equal(isEmptyGreeting("Hola vi el sitio y quiero proponer mejoras concretas"), false);
+assert.equal(isEmptyGreeting("Hola, vi un error en el select del formulario de cooperar"), false);
+assert.equal(isEmptyGreeting("Oportunidad de corregir el footer del taller público"), false);
+
+for (const message of [
+  "Hola vi el sitio y quiero proponer mejoras concretas",
+  "Hola, vi un error en el select del formulario de cooperar",
+  "Oportunidad de corregir el footer del taller público",
+  "Hola, conectemos y veamos si podemos hacer algo juntos pronto.",
+]) {
+  assert.equal(
+    cooperateSchema.safeParse({
+      name: "Ana Pérez",
+      email: "ana@lab.cl",
+      intent: "nota",
+      message,
+    }).success,
+    true,
+    `real note should pass: ${message}`,
+  );
+}
 assert.equal(normalizeNote("ÁÉ hola!"), "ae hola");
 
 const badEmail = cooperateSchema.safeParse({
@@ -325,7 +387,8 @@ assert.equal(isTooFast({ t: "   " }, now), true);
 assert.equal(isTooFast({ t: 0 }, now), true);
 assert.equal(isTooFast({ t: now - 500 }, now), true);
 assert.equal(isTooFast({ t: String(now - 4000) }, now), false);
-assert.equal(isTooFast({ t: now + 10_000 }, now), true);
+assert.equal(isTooFast({ t: now + 10_000 }, now), false);
+assert.equal(isTooFast({ t: now + 6 * 60 * 1000 }, now), true);
 
 assert.equal(limited("lim-a"), false);
 assert.equal(limited("lim-a"), false);
