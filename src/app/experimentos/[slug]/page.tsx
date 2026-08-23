@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { experimentBySlug, experiments, statusLabel } from "@/lib/lab";
+import { experimentBySlug, experiments, isOpenExperimentSlug, statusLabel } from "@/lib/lab";
 import { notes } from "@/lib/notes";
 import { formatDate } from "@/lib/site";
 
@@ -75,7 +75,7 @@ export default async function ExperimentPage({ params }: Props) {
           </div>
         ) : null}
         <div className="actions">
-          {item.openToJoin ? (
+          {isOpenExperimentSlug(item.slug) ? (
             <Link className="button" href={`/cooperar?intento=entrar&experimento=${item.slug}`}>
               Entrar a este experimento
             </Link>

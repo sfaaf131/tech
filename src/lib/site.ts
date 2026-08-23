@@ -30,5 +30,5 @@ export function formatDate(iso: string) {
     month: "short",
     year: "numeric",
     timeZone: "America/Santiago",
-  }).format(new Date(`${iso}T12:00:00`));
+  }).format(new Date(`${iso}T12:00:00Z`));
 }

@@ -33,9 +33,21 @@ export function normalizeNote(value: string) {
 export function isEmptyGreeting(message: string) {
   const normalized = normalizeNote(message);
   if (!normalized) return true;
-  const words = normalized.split(" ");
-  if (words.length >= 12) return false;
-  return greetings.some((item) => normalized === item || normalized.startsWith(`${item} `));
+  const tokens = [...greetings].sort((a, b) => b.length - a.length);
+  let rest = normalized;
+  let stripped = true;
+  while (stripped && rest) {
+    stripped = false;
+    for (const item of tokens) {
+      if (rest === item) return true;
+      if (rest.startsWith(`${item} `)) {
+        rest = rest.slice(item.length).trim();
+        stripped = true;
+        break;
+      }
+    }
+  }
+  return !rest;
 }
 
 function isHttpUrl(value: string) {
@@ -122,7 +134,7 @@ export function isTooFast(body: Record<string, unknown>, now = Date.now()) {
   if (typeof raw === "string" && raw.trim() === "") return true;
   const started = Number(typeof raw === "string" ? raw.trim() : raw);
   if (!Number.isFinite(started) || started <= 0) return true;
-  if (started > now) return true;
+  if (started > now) return started - now > 5 * 60 * 1000;
   return now - started < 3000;
 }
 

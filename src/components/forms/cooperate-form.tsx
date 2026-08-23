@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { experiments, openExperiments } from "@/lib/lab";
 import {
   asIntent,
@@ -17,8 +17,50 @@ import {
   messageHints,
   type CooperateIntent,
 } from "@/lib/schemas";
+import { site } from "@/lib/site";
 
 type FieldErrors = Record<string, string[] | undefined>;
+
+type SentDraft = {
+  name: string;
+  email: string;
+  intent: string;
+  experiment: string;
+  message: string;
+  link: string;
+};
+
+function fieldString(data: Record<string, FormDataEntryValue>, key: string) {
+  const value = data[key];
+  return typeof value === "string" ? value : "";
+}
+
+function draftFromData(data: Record<string, FormDataEntryValue>): SentDraft {
+  const intentValue = asIntent(fieldString(data, "intent"));
+  const experimentSlug = fieldString(data, "experiment");
+  const experimentTitle =
+    experiments.find((item) => item.slug === experimentSlug)?.title ?? experimentSlug;
+  return {
+    name: fieldString(data, "name"),
+    email: fieldString(data, "email"),
+    intent: intentValue ? intentLabels[intentValue] : fieldString(data, "intent"),
+    experiment: experimentTitle,
+    message: fieldString(data, "message"),
+    link: fieldString(data, "link"),
+  };
+}
+
+function draftText(draft: SentDraft) {
+  const lines = [
+    `Nombre: ${draft.name}`,
+    `Correo: ${draft.email}`,
+    `Intento: ${draft.intent || "—"}`,
+    `Experimento: ${draft.experiment || "ninguno"}`,
+  ];
+  if (draft.link) lines.push(`Enlace: ${draft.link}`);
+  lines.push("", draft.message);
+  return lines.join("\n");
+}
 
 export function CooperateForm({
   presetIntent: initialIntent,
@@ -32,9 +74,24 @@ export function CooperateForm({
   const [detail, setDetail] = useState<string | null>(null);
   const [fields, setFields] = useState<FieldErrors>({});
   const [intent, setIntent] = useState<CooperateIntent | "">(asIntent(initialIntent));
+  const [sent, setSent] = useState<SentDraft | null>(null);
+  const [copied, setCopied] = useState(false);
 
   function markStarted() {
     if (!startedAt.current) startedAt.current = String(Date.now());
+  }
+
+  useEffect(() => {
+    markStarted();
+  }, []);
+
+  function resetForm() {
+    setStatus("idle");
+    setDetail(null);
+    setFields({});
+    setSent(null);
+    setCopied(false);
+    startedAt.current = String(Date.now());
   }
 
   function focusFirst(next: FieldErrors) {
@@ -43,10 +100,22 @@ export function CooperateForm({
     document.getElementById(cooperateFieldIds[first])?.focus();
   }
 
+  async function copyDraft() {
+    if (!sent) return;
+    try {
+      await navigator.clipboard.writeText(draftText(sent));
+      setCopied(true);
+    } catch {
+      setCopied(false);
+    }
+  }
+
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
+    setSent(draftFromData(data));
+    setCopied(false);
     setStatus("busy");
     setDetail(null);
     setFields({});
@@ -77,7 +146,9 @@ export function CooperateForm({
           queueMicrotask(() => focusFirst(next));
           return;
         }
-        setDetail("No salió. El mensaje sigue en el cuadro: puedes reintentar. O escríbeme a team@kondax.tech.");
+        setDetail(
+          `No salió. El mensaje sigue en el cuadro: puedes reintentar. O escríbeme a ${site.email}.`,
+        );
         return;
       }
 
@@ -90,15 +161,34 @@ export function CooperateForm({
   }
 
   if (status === "ok") {
+    const body = sent ? draftText(sent) : "";
+    const mailto = `mailto:${site.email}?subject=${encodeURIComponent("Cooperar — kondax.tech")}&body=${encodeURIComponent(body)}`;
     return (
       <div className="banner" role="status">
         <h2 className="row-title">{cooperateCopy.successTitle}</h2>
         <p className="lede ok">{detail}</p>
+        {sent ? (
+          <>
+            <p className="hint">
+              {sent.name} · {sent.email}
+            </p>
+            <p className="lede">{sent.message}</p>
+          </>
+        ) : null}
+        <p className="sr-only" aria-live="polite">
+          {copied ? "Copiado" : ""}
+        </p>
         <div className="actions">
+          <button className="button" type="button" onClick={copyDraft}>
+            {copied ? "Copiado" : "Copiar el texto"}
+          </button>
+          <a className="button ghost" href={mailto}>
+            Escribir a {site.email}
+          </a>
           <Link className="button ghost" href="/">
             Volver al taller
           </Link>
-          <button className="button ghost" type="button" onClick={() => setStatus("idle")}>
+          <button className="button ghost" type="button" onClick={resetForm}>
             Dejar otra
           </button>
         </div>
