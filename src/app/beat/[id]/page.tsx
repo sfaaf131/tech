@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { BuyButton } from "@/components/BuyButton";
 import { ContactProducerButton } from "@/components/ContactProducerButton";
 
+// Se lee de la base de datos en cada visita; no pre-renderizar en build.
+export const dynamic = "force-dynamic";
+
 function formatPrice(cents: number, currency: string): string {
   return new Intl.NumberFormat("es", { style: "currency", currency }).format(
     cents / 100

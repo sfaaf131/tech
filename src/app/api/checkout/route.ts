@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { stripe, calculatePlatformFeeCents } from "@/lib/stripe";
+import { getStripe, calculatePlatformFeeCents } from "@/lib/stripe";
 
 export async function POST(request: Request) {
   const session = await auth();
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     },
   });
 
-  const checkoutSession = await stripe.checkout.sessions.create({
+  const checkoutSession = await getStripe().checkout.sessions.create({
     mode: "payment",
     line_items: [
       {

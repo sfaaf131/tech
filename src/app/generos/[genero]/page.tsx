@@ -4,6 +4,9 @@ import { prisma } from "@/lib/prisma";
 import { GENRES, genreValueFromSlug } from "@/lib/genres";
 import { BeatCard } from "@/components/BeatCard";
 
+// Se lee de la base de datos en cada visita; no pre-renderizar en build.
+export const dynamic = "force-dynamic";
+
 export default async function GenrePage({
   params,
 }: {

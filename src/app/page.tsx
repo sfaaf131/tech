@@ -3,6 +3,10 @@ import { prisma } from "@/lib/prisma";
 import { GENRES } from "@/lib/genres";
 import { BeatCard } from "@/components/BeatCard";
 
+// El catálogo se lee de la base de datos en cada visita, así que no debe
+// pre-renderizarse durante el build (no hay base de datos disponible ahí).
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const beats = await prisma.beat.findMany({
     orderBy: { createdAt: "desc" },

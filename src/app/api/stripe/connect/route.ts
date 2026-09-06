@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 
 export async function POST() {
   const session = await auth();
@@ -27,7 +27,7 @@ export async function POST() {
   let accountId = producerProfile.stripeAccountId;
 
   if (!accountId) {
-    const account = await stripe.accounts.create({
+    const account = await getStripe().accounts.create({
       type: "express",
       email: session.user.email ?? undefined,
       capabilities: {
@@ -43,7 +43,7 @@ export async function POST() {
     });
   }
 
-  const accountLink = await stripe.accountLinks.create({
+  const accountLink = await getStripe().accountLinks.create({
     account: accountId,
     refresh_url: `${process.env.NEXT_PUBLIC_APP_URL}/panel/productor`,
     return_url: `${process.env.NEXT_PUBLIC_APP_URL}/panel/productor?conectado=true`,
