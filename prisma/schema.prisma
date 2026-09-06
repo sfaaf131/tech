@@ -1,0 +1,152 @@
+// Esquema de base de datos del marketplace de beats.
+// Postgres (Neon) en producción vía Vercel; ver .env.example para DATABASE_URL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PRODUCER
+  CLIENT
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  name          String
+  role          Role
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Solo aplica si role == PRODUCER
+  producerProfile ProducerProfile?
+
+  beatsPurchased  Order[]           @relation("ClientOrders")
+  sentMessages    Message[]         @relation("SentMessages")
+  conversations   ConversationUser[]
+
+  @@index([role])
+}
+
+model ProducerProfile {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio               String?
+  specialty         String?  // a qué se dedica: "Productor de Trap y Hip-Hop", etc.
+  stripeAccountId   String?  // cuenta de Stripe Connect del productor
+  stripeOnboarded   Boolean  @default(false)
+  createdAt         DateTime @default(now())
+
+  beats             Beat[]
+}
+
+enum Genre {
+  INDIE
+  HIPHOP
+  TRAP
+  POP
+  LOFI
+  REGGAETON
+  RNB
+  ELECTRONICA
+  ROCK
+  OTRO
+}
+
+model Beat {
+  id              String    @id @default(cuid())
+  producerId      String
+  producer        ProducerProfile @relation(fields: [producerId], references: [id], onDelete: Cascade)
+  title           String
+  genre           Genre
+  bpm             Int
+  key             String    // tonalidad, ej: "A minor", "C# major"
+  priceCents      Int       // precio en centavos, moneda definida por priceCurrency
+  priceCurrency   String    @default("USD")
+
+  // Archivos: se guardan en almacenamiento externo (ej. S3/Vercel Blob); aquí solo la URL/key.
+  previewFileUrl  String    // preview de 20-50s, con marca de agua de audio
+  fullFileUrl     String    // pista completa, solo accesible tras pago confirmado
+  previewDurationSeconds Int @default(30)
+
+  stems           Stem[]
+  orders          Order[]
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([genre])
+  @@index([producerId])
+}
+
+model Stem {
+  id        String   @id @default(cuid())
+  beatId    String
+  beat      Beat     @relation(fields: [beatId], references: [id], onDelete: Cascade)
+  label     String   // ej: "Drums", "Bass", "Melody"
+  fileUrl   String
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id                    String      @id @default(cuid())
+  beatId                String
+  beat                  Beat        @relation(fields: [beatId], references: [id])
+  clientId              String
+  client                User        @relation("ClientOrders", fields: [clientId], references: [id])
+  status                OrderStatus @default(PENDING)
+  amountCents           Int
+  currency              String      @default("USD")
+  stripePaymentIntentId String?     @unique
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  @@index([clientId])
+  @@index([beatId])
+  @@index([status])
+}
+
+model Conversation {
+  id        String              @id @default(cuid())
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+
+  participants ConversationUser[]
+  messages     Message[]
+}
+
+model ConversationUser {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id])
+  body           String
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId])
+}
