@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 
 export async function POST() {
   const session = await auth();
@@ -18,7 +18,7 @@ export async function POST() {
     return NextResponse.json({ onboarded: false });
   }
 
-  const account = await stripe.accounts.retrieve(producerProfile.stripeAccountId);
+  const account = await getStripe().accounts.retrieve(producerProfile.stripeAccountId);
   const onboarded = Boolean(account.details_submitted && account.charges_enabled);
 
   if (onboarded !== producerProfile.stripeOnboarded) {
