@@ -14,6 +14,7 @@ out/
 .vercel
 coverage/
 *.tsbuildinfo
+next-env.d.ts
 
 # logs / os / editors
 *.log
